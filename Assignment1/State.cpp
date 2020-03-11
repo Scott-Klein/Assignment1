@@ -2,10 +2,23 @@
 #include <iostream>
 using namespace std;
 
+State::State(int n)
+{
+	if (n > 2)
+	{
+		size = n;
+	}
+	else
+	{
+		size = 3;
+	}
+	InitialiseInternalState();
+}
+
 State::State()
 {
+	size = 3;
 	InitialiseInternalState();
-
 }
 
 #pragma region PublicFunctions
@@ -22,9 +35,19 @@ void State::Print()
 	PrintLastLine();
 }
 
+int State::BoardSize()
+{
+	return this->size;
+}
+
 #pragma endregion
 
 #pragma region PrivateFunctions
+void State::RandomiseNewState()
+{
+
+}
+
 
 void State::PrintFirstLine()
 {
@@ -59,9 +82,10 @@ void State::PrintLastLine()
 
 void State::InitialiseInternalState()
 {
-	for (int i = 0; i < 9; i++)
+	internalState = new int[size * size];
+	for (int i = 0; i < size*size; i++)
 	{
-		internalState[i] = 0;
+		internalState[i] = i;
 	}
 }
 
