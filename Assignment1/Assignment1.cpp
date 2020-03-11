@@ -6,6 +6,6 @@
 int main()
 {
     std::cout << "Assignment 1 --- Data Structures and Algorithms.\n";
-    State test;
+    State test = State(3, 6);
     test.Print();
 }
