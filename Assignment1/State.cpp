@@ -5,6 +5,7 @@
 #include <vector>
 #include <list>
 
+
 using namespace std;
 
 State::State(int n, int k)
@@ -29,6 +30,12 @@ State::State()
 	InitialiseInternalState();
 }
 
+State::State(State* parent, int from, int to)
+{
+	this->internalState = parent->CopyInternalState();
+	this->MoveColumn(from, to);
+}
+
 #pragma region PublicFunctions
 
 void State::Print()
@@ -43,9 +50,24 @@ void State::Print()
 	PrintLastLine();
 }
 
+void State::OutputLegalActions()
+{
+	GeneratePossibleActions();
+}
+
 int State::BoardSize()
 {
 	return this->size;
+}
+
+int* State::CopyInternalState()
+{
+	int* newState = new int[size * size];
+	for (int i = 0; i < size*size; i++)
+	{
+		newState[i] = internalState[i];
+	}
+	return newState;
 }
 
 #pragma endregion
@@ -127,6 +149,21 @@ void State::DepositTop(int column, int value)
 int* State::GetColumn(int k)
 {
 	return &internalState[k * size];
+}
+
+void State::GeneratePossibleActions()
+{
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			if (i==j)
+			{
+				continue;
+			}
+			//this->actions.push_back(Action());
+		}
+	}
 }
 
 int State::GetNewRandom()
