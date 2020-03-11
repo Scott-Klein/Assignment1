@@ -2,8 +2,10 @@
 //
 
 #include <iostream>
-
+#include "State.h"
 int main()
 {
     std::cout << "Assignment 1 --- Data Structures and Algorithms.\n";
+    State test;
+    test.Print();
 }
