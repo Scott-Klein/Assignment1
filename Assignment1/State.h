@@ -23,6 +23,7 @@ private:
 	int numbers;
 	vector<int> candidatePositioins;
 	list<Action> actions;
+
 	//funcs
 	void PrintFirstLine();
 	void PrintAllRows();
@@ -32,13 +33,16 @@ private:
 	void InitialiseRandomisation();
 	void RandomiseNewState();
 	void DropNumbers();
-	void DropColumn(int* column);
-	bool MoveColumn(int from, int to);
-	int RemoveTop(int from);
-	void DepositTop(int column, int value);
-	int* GetColumn(int k);
 	void GeneratePossibleActions();
+	void DropColumn(int* column);
+	void DepositTop(int column, int value);
+
+	bool MoveColumn(int from, int to);
+
+	int* GetColumn(int k);
+
 	int GetNewRandom();
+	int RemoveTop(int from);
 protected:
 };
 
