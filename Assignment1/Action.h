@@ -9,6 +9,7 @@ private:
 
 public:
 	Action(int from, int to);
+	void PrintMove();
 protected:
 };
 

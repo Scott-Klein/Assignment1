@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "../Assignment1/State.h"
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Assignment1tests
@@ -16,8 +17,6 @@ namespace Assignment1tests
 		*/
 		TEST_METHOD(TestMethod1)
 		{
-			State* testState = new State();
-
 			Assert::AreEqual(1, 1);
 			Assert::AreNotEqual(4, 1);
 		}

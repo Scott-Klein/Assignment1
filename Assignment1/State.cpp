@@ -53,6 +53,7 @@ void State::Print()
 void State::OutputLegalActions()
 {
 	GeneratePossibleActions();
+	PrintLegalActions();
 }
 
 int State::BoardSize()
@@ -117,6 +118,7 @@ bool State::MoveColumn(int from, int to)
 	if (GetColumn(to)[0] == 0)
 	{
 		DepositTop(to, RemoveTop(from));
+		DropNumbers();
 		return true;
 	}
 	else
@@ -153,16 +155,25 @@ int* State::GetColumn(int k)
 
 void State::GeneratePossibleActions()
 {
-	for (int i = 0; i < size; i++)
+	for (int fromColumn = 0; fromColumn < size; fromColumn++)
 	{
-		for (int j = 0; j < size; j++)
+		for (int toColumn = 0; toColumn < size; toColumn++)
 		{
-			if (i==j)
+			if (fromColumn != toColumn)
 			{
-				continue;
+				Action action = Action(fromColumn, toColumn);
+				this->actions.push_back(action);
 			}
-			//this->actions.push_back(Action());
 		}
+	}
+}
+
+void State::PrintLegalActions()
+{
+	auto it = actions.begin();
+	for (; it != actions.end(); it++)
+	{
+		(*it).PrintMove();
 	}
 }
 
@@ -203,6 +214,7 @@ void State::PrintLastLine()
 	{
 		cout << "--- ";
 	}
+	cout << endl;
 }
 
 void State::InitialiseInternalState()

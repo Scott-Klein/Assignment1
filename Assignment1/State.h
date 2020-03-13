@@ -15,7 +15,7 @@ public:
 	void OutputLegalActions();
 	int BoardSize();
 	int* CopyInternalState();
-
+	bool MoveColumn(int from, int to);
 private:
 	//vars
 	int* internalState;
@@ -34,10 +34,11 @@ private:
 	void RandomiseNewState();
 	void DropNumbers();
 	void GeneratePossibleActions();
+	void PrintLegalActions();
 	void DropColumn(int* column);
 	void DepositTop(int column, int value);
 
-	bool MoveColumn(int from, int to);
+
 
 	int* GetColumn(int k);
 

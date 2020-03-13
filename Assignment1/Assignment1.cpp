@@ -4,9 +4,14 @@
 #include <iostream>
 #include "Action.h"
 #include "State.h"
+using namespace std;
+
 int main()
 {
     std::cout << "Assignment 1 --- Data Structures and Algorithms.\n";
     State test = State(3, 6);
     test.Print();
+    test.MoveColumn(0, 2);
+    test.Print();
+    //test.OutputLegalActions();
 }
