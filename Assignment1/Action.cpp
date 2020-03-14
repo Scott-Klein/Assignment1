@@ -14,4 +14,12 @@ void Action::PrintMove()
 	cout << "Move from " << colFrom << " to " << colTo << endl;
 }
 
+int Action::GetFrom()
+{
+	return this->colFrom;
+}
 
+int Action::GetTo()
+{
+	return this->colTo;
+}

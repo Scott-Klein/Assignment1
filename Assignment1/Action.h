@@ -9,6 +9,8 @@ private:
 
 public:
 	Action(int from, int to);
+	int GetFrom();
+	int GetTo();
 	void PrintMove();
 protected:
 };

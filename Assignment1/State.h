@@ -38,8 +38,9 @@ private:
 	void DropColumn(int* column);
 	void DepositTop(int column, int value);
 
-
-
+	bool CanDoAction(Action action);
+	bool TopOfColumnClear(int column);
+	bool ColumnEmpty(int column);
 	int* GetColumn(int k);
 
 	int GetNewRandom();

@@ -64,7 +64,7 @@ int State::BoardSize()
 int* State::CopyInternalState()
 {
 	int* newState = new int[size * size];
-	for (int i = 0; i < size*size; i++)
+	for (int i = 0; i < size * size; i++)
 	{
 		newState[i] = internalState[i];
 	}
@@ -91,6 +91,7 @@ void State::DropNumbers()
 	}
 }
 
+
 void State::DropColumn(int* column)
 {
 	list<int> temp;
@@ -115,7 +116,7 @@ void State::DropColumn(int* column)
 
 bool State::MoveColumn(int from, int to)
 {
-	if (GetColumn(to)[0] == 0)
+	if (TopOfColumnClear(to))
 	{
 		DepositTop(to, RemoveTop(from));
 		DropNumbers();
@@ -148,6 +149,33 @@ void State::DepositTop(int column, int value)
 	GetColumn(column)[0] = value;
 }
 
+bool State::CanDoAction(Action action)
+{
+	if (action.GetFrom() == action.GetTo())
+	{
+		return false;
+	}
+	return (TopOfColumnClear(action.GetTo()) && !ColumnEmpty(action.GetFrom()));
+}
+
+bool State::TopOfColumnClear(int column)
+{
+	return GetColumn(column)[0] == 0;
+}
+
+bool State::ColumnEmpty(int column)
+{
+	int* arr = GetColumn(column);
+	for (int i = 0; i < size; i++)
+	{
+		if (arr[i] > 0)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 int* State::GetColumn(int k)
 {
 	return &internalState[k * size];
@@ -159,10 +187,10 @@ void State::GeneratePossibleActions()
 	{
 		for (int toColumn = 0; toColumn < size; toColumn++)
 		{
-			if (fromColumn != toColumn)
+			Action candidate = Action(fromColumn, toColumn);
+			if (CanDoAction(candidate))
 			{
-				Action action = Action(fromColumn, toColumn);
-				this->actions.push_back(action);
+				this->actions.push_back(candidate);
 			}
 		}
 	}
@@ -199,7 +227,7 @@ void State::PrintAllRows()
 {
 	for (int i = 0; i < size; i++)
 	{
-		for (int j = 0; j < (size*size); j += size)
+		for (int j = 0; j < (size * size); j += size)
 		{
 			cout << "| " << internalState[i + j] << " ";
 		}
