@@ -58,6 +58,15 @@ void State::OutputLegalActions()
 	PrintLegalActions();
 }
 
+priority_queue<Action> State::GetLegalActionPriorityQueue()
+{
+	if (actions.empty())
+	{
+		GeneratePossibleActions();
+	}
+	return actions;
+}
+
 int State::BoardSize()
 {
 	return this->size;
@@ -197,7 +206,7 @@ void State::GeneratePossibleActions()
 			Action candidate = Action(fromColumn, toColumn);
 			if (CanDoAction(candidate))
 			{
-				this->actions.push_back(candidate);
+				this->actions.push(candidate);
 			}
 		}
 	}
@@ -205,10 +214,11 @@ void State::GeneratePossibleActions()
 
 void State::PrintLegalActions()
 {
-	auto it = actions.begin();
-	for (; it != actions.end(); it++)
+	while (!actions.empty())
 	{
-		(*it).PrintMove();
+		auto action = actions.top();
+		action.PrintMove();
+		actions.pop();
 	}
 }
 

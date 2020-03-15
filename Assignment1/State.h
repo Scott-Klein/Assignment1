@@ -2,7 +2,8 @@
 #include <vector>
 #include <list>
 #include "Action.h"
-
+#include <stack>
+#include <queue>
 using namespace std;
 
 class State
@@ -13,6 +14,7 @@ public:
 	State(State* parent, Action action);
 	void Print();
 	void OutputLegalActions();
+	priority_queue<Action> GetLegalActionPriorityQueue();
 	int BoardSize();
 	int* CopyInternalState();
 	bool MoveColumn(int from, int to);
@@ -24,7 +26,7 @@ private:
 	int size;
 	int numbers;
 	vector<int> candidatePositioins;
-	list<Action> actions;
+	priority_queue<Action> actions;
 
 	//funcs
 	void PrintFirstLine();

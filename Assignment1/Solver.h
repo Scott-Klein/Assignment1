@@ -1,5 +1,7 @@
 #pragma once
 #include "Goal.h"
+#include <stack>
+#include <queue>
 class Solver
 {
 public:
@@ -7,7 +9,8 @@ public:
 	Solver();
 	bool Success();
 private:
-
+	priority_queue<Action> legalActions;
+	Action lastAction;
 	int maxSteps;
 	Goal goal;
 	State state;
