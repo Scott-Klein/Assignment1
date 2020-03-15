@@ -32,7 +32,6 @@ int main()
     cin >> row;
 
     Goal goal = Goal(target, column, row);
-
     Solver solver = Solver(goal, test, 4000);
 
 }

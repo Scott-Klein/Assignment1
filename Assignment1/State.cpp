@@ -171,6 +171,7 @@ bool State::CanDoAction(Action action)
 	{
 		return false;
 	}
+	
 	return (TopOfColumnClear(action.GetTo()) && !ColumnEmpty(action.GetFrom()));
 }
 
