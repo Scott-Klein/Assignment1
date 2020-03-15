@@ -30,11 +30,13 @@ State::State()
 	InitialiseInternalState();
 }
 
-State::State(State* parent, int from, int to)
+State::State(State* parent, Action action)
 {
 	this->internalState = parent->CopyInternalState();
-	this->MoveColumn(from, to);
+	this->size = parent->BoardSize();
+	this->MoveColumn(action.GetFrom(), action.GetTo());
 }
+
 
 #pragma region PublicFunctions
 
@@ -127,6 +129,11 @@ bool State::MoveColumn(int from, int to)
 		return false;
 	}
 
+}
+
+int State::BlockAt(int column, int row)
+{ 
+	return this->internalState[column * size + row];
 }
 
 int State::RemoveTop(int from)

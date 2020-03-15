@@ -10,12 +10,14 @@ class State
 public:
 	State(int n, int k);
 	State();
-	State(State* parent, int from, int to);
+	State(State* parent, Action action);
 	void Print();
 	void OutputLegalActions();
 	int BoardSize();
 	int* CopyInternalState();
 	bool MoveColumn(int from, int to);
+
+	int BlockAt(int column, int row);
 private:
 	//vars
 	int* internalState;

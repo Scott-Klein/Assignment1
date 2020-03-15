@@ -10,6 +10,13 @@ int main()
 {
     std::cout << "Assignment 1 --- Data Structures and Algorithms.\n";
     State test = State(3, 6);
+    cout << "First board" << endl;
     test.Print();
-    test.OutputLegalActions();
+
+    cout << "bottom first: " << endl;
+    cout << test.BlockAt(0, 2) << endl;
+    cout << "bottom second: " << endl;
+    cout << test.BlockAt(1, 2) << endl;
+    cout << "bottom last: " << endl;
+    cout << test.BlockAt(2, 2) << endl;
 }
