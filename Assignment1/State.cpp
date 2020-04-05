@@ -19,6 +19,7 @@ State::State(int n, int k)
 		size = 3;
 	}
 	numbers = k;
+	Distance = 0;
 	InitialiseInternalState();
 }
 
@@ -32,9 +33,11 @@ State::State()
 
 State::State(State* parent, Action action)
 {
+
 	this->internalState = parent->CopyInternalState();
 	this->size = parent->BoardSize();
 	this->MoveColumn(action.GetFrom(), action.GetTo());
+	this->Distance = parent->Distance + 1;
 }
 
 
@@ -58,14 +61,7 @@ void State::OutputLegalActions()
 	PrintLegalActions();
 }
 
-priority_queue<Action> State::GetLegalActionPriorityQueue()
-{
-	if (actions.empty())
-	{
-		GeneratePossibleActions();
-	}
-	return actions;
-}
+
 
 int State::BoardSize()
 {
@@ -80,6 +76,22 @@ int* State::CopyInternalState()
 		newState[i] = internalState[i];
 	}
 	return newState;
+}
+
+int State::LegalNeighbourCount()
+{
+	return 4;
+}
+
+vector<State> State::GetNeighbours()
+{
+	vector<State> result;
+	GeneratePossibleActions();
+	for (int i = 0; i < this->actions.size(); i++)
+	{
+		result.push_back(State(this, actions[i]));
+	}
+	return result;
 }
 
 #pragma endregion
@@ -139,10 +151,15 @@ bool State::MoveColumn(int from, int to)
 
 }
 
+
+
+
 int State::BlockAt(int column, int row)
-{ 
+{
 	return this->internalState[column * size + row];
 }
+
+
 
 int State::RemoveTop(int from)
 {
@@ -170,7 +187,7 @@ bool State::CanDoAction(Action action)
 	{
 		return false;
 	}
-	
+
 	return (TopOfColumnClear(action.GetTo()) && !ColumnEmpty(action.GetFrom()));
 }
 
@@ -197,6 +214,20 @@ int* State::GetColumn(int k)
 	return &internalState[k * size];
 }
 
+int State::CountBlocksAtAndAbove(int col, int row)
+{
+	int* column = GetColumn(col);
+	int count = 0;
+	for (int i = 0; i < row+1; i++)
+	{
+		if (column[i] > 0)
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
 void State::GeneratePossibleActions()
 {
 	for (int fromColumn = 0; fromColumn < size; fromColumn++)
@@ -206,8 +237,7 @@ void State::GeneratePossibleActions()
 			Action candidate = Action(fromColumn, toColumn);
 			if (CanDoAction(candidate))
 			{
-				GenerateHeuristic(&candidate);
-				this->actions.push(candidate);
+				this->actions.push_back(candidate);
 			}
 		}
 	}
@@ -215,7 +245,7 @@ void State::GeneratePossibleActions()
 
 void State::GenerateHeuristic(Action* const action)
 {
-	action->GetValue(50);
+	action->SetValue(50);
 }
 
 void State::PrintLegalActions()

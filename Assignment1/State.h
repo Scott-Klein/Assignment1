@@ -4,6 +4,8 @@
 #include "Action.h"
 #include <stack>
 #include <queue>
+#include "Goal.h"
+
 using namespace std;
 
 class State
@@ -14,19 +16,31 @@ public:
 	State(State* parent, Action action);
 	void Print();
 	void OutputLegalActions();
-	priority_queue<Action> GetLegalActionPriorityQueue();
 	int BoardSize();
 	int* CopyInternalState();
+	int LegalNeighbourCount();
 	bool MoveColumn(int from, int to);
-
+	void CalculateHeuristic(Goal goal);
+	int GetFinalvalue()
+	{
+		return heuristic + Distance;
+	}
 	int BlockAt(int column, int row);
+	vector<State> GetNeighbours();
+	int Distance;
+
+	int GetHeuristicValue()
+	{
+		return heuristic;
+	}
 private:
 	//vars
 	int* internalState;
 	int size;
 	int numbers;
+	int heuristic;
 	vector<int> candidatePositioins;
-	priority_queue<Action> actions;
+	vector<Action> actions;
 
 	//funcs
 	void PrintFirstLine();
@@ -48,9 +62,29 @@ private:
 	bool TopOfColumnClear(int column);
 	bool ColumnEmpty(int column);
 	int* GetColumn(int k);
-
+	int CountBlocksAtAndAbove(int col, int row);
+	int CountBlocksAtAndAboveSubject(int block);
 	int GetNewRandom();
 	int RemoveTop(int from);
 protected:
 };
 
+void State::CalculateHeuristic(Goal goal)
+{
+	int blocksInDestinationColumn = 0;
+
+	blocksInDestinationColumn = CountBlocksAtAndAbove(goal.Column, goal.Row);
+	heuristic = (blocksInDestinationColumn + CountBlocksAtAndAboveSubject(goal.Block));
+}
+
+int State::CountBlocksAtAndAboveSubject(int block)
+{
+	for (int i = 0; i < size*size; i++)
+	{
+		if (internalState[i] == block)
+		{
+			int col = i / size;
+			return CountBlocksAtAndAbove(col, (i % size));
+		}
+	}
+}

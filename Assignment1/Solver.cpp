@@ -3,10 +3,9 @@
 
 using namespace std;
 
-Solver::Solver(Goal goal, State state, int Steps)
+Solver::Solver(Goal goal, State state)
 {
 	this->state = state;
-	this->maxSteps = Steps;
 	this->goal = goal;
 
 	this->found = Search();
@@ -24,25 +23,29 @@ bool Solver::Success()
 
 bool Solver::Search()
 {
-	int steps = 0;
-	cout << "Starting search" << endl;
-	while (steps++ < this->maxSteps && !this->goal.Accomplished(this->state))
+	priority_queue<State> openSet;
+	openSet.push(state);
+
+	vector<State> closeSet;
+
+	state.CalculateHeuristic();
+
+	while (!openSet.empty())
 	{
-		//Gets the best move out of the queue
-		Action top = state.GetLegalActionPriorityQueue().top();
-		cout << "Step: " << steps << ", ";
-		top.PrintMove();
-		
-		//Makes the top move
-		this->state = State(&this->state, this->legalActions.top());
-		this->state.Print();
+		State current = openSet.top();
+		openSet.pop();
+		closeSet.push_back(current);
+		vector<State> neighbours = current.GetNeighbours();
+		for (int i = 0; i < neighbours.size(); i++)
+		{
+			State neighbour = neighbours[i];
+
+			neighbour.CalculateHeuristic(goal);
+
+			openSet.push(neighbour);
+		}
 	}
-	if (this->goal.Accomplished(this->state))
-	{
-		cout << "Found the goal in " << steps << " steps " << endl;
-		return true;
-	}
-	cout << "Found nothing after " << maxSteps << endl;
+
 	return false;
 }
 

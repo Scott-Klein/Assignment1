@@ -2,16 +2,14 @@
 #include "Goal.h"
 #include <stack>
 #include <queue>
+#include <vector>
 class Solver
 {
 public:
-	Solver(Goal goal, State state, int Steps);
+	Solver(Goal goal, State state);
 	Solver();
 	bool Success();
 private:
-	priority_queue<Action> legalActions;
-	Action lastAction;
-	int maxSteps;
 	Goal goal;
 	State state;
 	bool Search();
