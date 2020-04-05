@@ -41,6 +41,8 @@ private:
 	void PrintLegalActions();
 	void DropColumn(int* column);
 	void DepositTop(int column, int value);
+	void GenerateHeuristic(Action* const action);
+
 
 	bool CanDoAction(Action action);
 	bool TopOfColumnClear(int column);

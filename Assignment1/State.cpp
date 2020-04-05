@@ -102,7 +102,6 @@ void State::DropNumbers()
 	}
 }
 
-
 void State::DropColumn(int* column)
 {
 	list<int> temp;
@@ -207,10 +206,16 @@ void State::GeneratePossibleActions()
 			Action candidate = Action(fromColumn, toColumn);
 			if (CanDoAction(candidate))
 			{
+				GenerateHeuristic(&candidate);
 				this->actions.push(candidate);
 			}
 		}
 	}
+}
+
+void State::GenerateHeuristic(Action* const action)
+{
+	action->GetValue(50);
 }
 
 void State::PrintLegalActions()

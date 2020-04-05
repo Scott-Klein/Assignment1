@@ -51,6 +51,11 @@ int Action::GetValue()
 	return this->value;
 }
 
+void Action::SetValue(int value)
+{
+	this->value = value;
+}
+
 bool operator<(const Action& lhs, const Action& rhs)
 {
 	return lhs.value < rhs.value;

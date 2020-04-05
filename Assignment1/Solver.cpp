@@ -28,10 +28,12 @@ bool Solver::Search()
 	cout << "Starting search" << endl;
 	while (steps++ < this->maxSteps && !this->goal.Accomplished(this->state))
 	{
-		this->legalActions = this->state.GetLegalActionPriorityQueue();
-		Action top = this->legalActions.top();
+		//Gets the best move out of the queue
+		Action top = state.GetLegalActionPriorityQueue().top();
 		cout << "Step: " << steps << ", ";
 		top.PrintMove();
+		
+		//Makes the top move
 		this->state = State(&this->state, this->legalActions.top());
 		this->state.Print();
 	}

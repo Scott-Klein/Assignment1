@@ -16,6 +16,7 @@ public:
 	int GetFrom();
 	int GetTo();
 	int GetValue();
+	void SetValue(int value);
 	void PrintMove();
 	void RandomlyGenerateValue();
 protected:
