@@ -37,6 +37,10 @@ bool Solver::Search()
 		for (int i = 0; i < neighbours.size(); i++)
 		{
 			State neighbour = neighbours[i];
+			if (goal.Accomplished(neighbour))
+			{
+				return unWindMoves(neighbour);
+			}
 
 			neighbour.CalculateHeuristic(goal);
 

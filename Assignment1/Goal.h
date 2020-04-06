@@ -1,5 +1,5 @@
 #pragma once
-#include "State.h"
+//#include "State.h"
 
 class Goal
 {
@@ -15,3 +15,15 @@ private:
 protected:
 };
 
+
+bool Goal::Accomplished(State state)
+{
+	if (state.BlockAt(this->column, this->row) == this->block)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}

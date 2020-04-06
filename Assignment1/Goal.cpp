@@ -26,16 +26,4 @@ int Goal::Row()
 	return this->row;
 }
 
-bool Goal::Accomplished(State state)
-{
-	if (state.BlockAt(this->column, this->row) == this->block)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
 

@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
 #include <list>
-#include "Action.h"
 #include <stack>
 #include <queue>
 #include "Goal.h"
+#include "Action.h"
 
 using namespace std;
 
@@ -21,17 +21,28 @@ public:
 	int LegalNeighbourCount();
 	bool MoveColumn(int from, int to);
 	void CalculateHeuristic(Goal goal);
-	int GetFinalvalue()
-	{
-		return heuristic + distance;
-	}
+
 	int BlockAt(int column, int row);
 	vector<State> GetNeighbours();
 
+	Action GetLastMove()
+	{
+		return previousMove;
+	}
 
 	int GetHeuristicValue()
 	{
 		return heuristic;
+	}
+
+	State* GetPreviousState()
+	{
+		return previous;
+	}
+
+	int GetFinalvalue()
+	{
+		return heuristic + distance;
 	}
 private:
 	//vars
@@ -40,9 +51,10 @@ private:
 	int numbers;
 	int heuristic;
 	int distance;
+	Action previousMove;
 	vector<int> candidatePositioins;
 	vector<Action> actions;
-
+	State* previous;
 	//funcs
 	void PrintFirstLine();
 	void PrintAllRows();

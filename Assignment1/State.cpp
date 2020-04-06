@@ -33,7 +33,8 @@ State::State()
 
 State::State(State* parent, Action action)
 {
-
+	this->previous = parent;
+	this->previousMove = action;
 	this->internalState = parent->CopyInternalState();
 	this->size = parent->BoardSize();
 	this->MoveColumn(action.GetFrom(), action.GetTo());
@@ -243,10 +244,6 @@ void State::GeneratePossibleActions()
 	}
 }
 
-void State::GenerateHeuristic(Action* const action)
-{
-	action->SetValue(50);
-}
 
 void State::PrintLegalActions()
 {
