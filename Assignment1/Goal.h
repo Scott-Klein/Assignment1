@@ -4,26 +4,38 @@
 class Goal
 {
 public:
-	Goal(int block, int column, int row);
-	Goal();
-	int Block();
-	int Column();
-	int Row();
-	bool Accomplished(State state);
+	Goal(int block, int column, int row)
+	{
+		this->block = block;
+		this->column = column;
+		this->row = row;
+	}
+
+	Goal()
+	{
+	}
+
+	int Block()
+	{
+		return this->block;
+	}
+
+	int Column()
+	{
+		return this->column;
+	}
+
+	int Row()
+	{
+		return this->row;
+	}
+
 private:
 	int block, column, row;
 protected:
 };
 
 
-bool Goal::Accomplished(State state)
-{
-	if (state.BlockAt(this->column, this->row) == this->block)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
+
+
+

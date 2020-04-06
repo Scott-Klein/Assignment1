@@ -11,6 +11,10 @@ using namespace std;
 class State
 {
 public:
+	friend bool operator<(const State& lhs, const State& rhs);
+	bool operator==(const State& rhs) const { 
+		return true;
+	}
 	State(int n, int k);
 	State();
 	State(State* parent, Action action);
@@ -23,6 +27,9 @@ public:
 	void CalculateHeuristic(Goal goal);
 
 	int BlockAt(int column, int row);
+
+	bool GoalAccomplished(Goal goal);
+
 	vector<State> GetNeighbours();
 
 	Action GetLastMove()
@@ -47,6 +54,7 @@ public:
 private:
 	//vars
 	int* internalState;
+	int hash;
 	int size;
 	int numbers;
 	int heuristic;
@@ -68,8 +76,7 @@ private:
 	void PrintLegalActions();
 	void DropColumn(int* column);
 	void DepositTop(int column, int value);
-	void GenerateHeuristic(Action* const action);
-
+	void HashCode();
 
 	bool CanDoAction(Action action);
 	bool TopOfColumnClear(int column);
@@ -82,22 +89,3 @@ private:
 protected:
 };
 
-void State::CalculateHeuristic(Goal goal)
-{
-	int blocksInDestinationColumn = 0;
-
-	blocksInDestinationColumn = CountBlocksAtAndAbove(goal.Column, goal.Row);
-	heuristic = (blocksInDestinationColumn + CountBlocksAtAndAboveSubject(goal.Block));
-}
-
-int State::CountBlocksAtAndAboveSubject(int block)
-{
-	for (int i = 0; i < size*size; i++)
-	{
-		if (internalState[i] == block)
-		{
-			int col = i / size;
-			return CountBlocksAtAndAbove(col, (i % size));
-		}
-	}
-}

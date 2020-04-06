@@ -147,9 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Action.cpp" />
     <ClCompile Include="Assignment1.cpp" />
-    <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Solver.cpp" />
     <ClCompile Include="State.cpp" />
   </ItemGroup>

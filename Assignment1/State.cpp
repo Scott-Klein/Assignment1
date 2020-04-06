@@ -1,3 +1,5 @@
+#pragma once
+
 #include "State.h"
 #include <iostream>
 #include <stack>
@@ -7,6 +9,8 @@
 
 
 using namespace std;
+
+
 
 State::State(int n, int k)
 {
@@ -76,12 +80,25 @@ int* State::CopyInternalState()
 	{
 		newState[i] = internalState[i];
 	}
+
 	return newState;
 }
 
 int State::LegalNeighbourCount()
 {
 	return 4;
+}
+
+bool State::GoalAccomplished(Goal goal)
+{
+	if (BlockAt(goal.Column(), goal.Row()) == goal.Block())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 vector<State> State::GetNeighbours()
@@ -143,6 +160,7 @@ bool State::MoveColumn(int from, int to)
 	{
 		DepositTop(to, RemoveTop(from));
 		DropNumbers();
+		HashCode();
 		return true;
 	}
 	else
@@ -181,6 +199,7 @@ void State::DepositTop(int column, int value)
 {
 	GetColumn(column)[0] = value;
 }
+
 
 bool State::CanDoAction(Action action)
 {
@@ -301,6 +320,7 @@ void State::InitialiseInternalState()
 	ZeroInternalState();
 	RandomiseNewState();
 	DropNumbers();
+	HashCode();
 }
 
 void State::ZeroInternalState()
@@ -321,6 +341,57 @@ void State::InitialiseRandomisation()
 		candidatePositioins.push_back(i);
 	}
 }
+
+void State::HashCode()
+{
+	int code = 0;
+	for (int i = 0; i < size * size; i++)
+	{
+		code = code << 3;
+		code = code | internalState[i];
+	}
+	hash = code;
+}
+
+
+bool operator<(const State& lhs, const State& rhs)
+{
+	if (lhs.hash == rhs.hash)
+	{
+		bool isAlright = true;
+		for (int i = 0; i < lhs.size* lhs.size; i++)
+		{
+			if (lhs.internalState[i] != rhs.internalState[i])
+			{
+				isAlright = false;
+			}
+		}
+		return false;
+	}
+	return ((lhs.distance + rhs.heuristic) > (rhs.distance + rhs.heuristic));
+}
+
+void State::CalculateHeuristic(Goal goal)
+{
+	int blocksInDestinationColumn = 0;
+
+	blocksInDestinationColumn = CountBlocksAtAndAbove(goal.Column(), goal.Row());
+	heuristic = (blocksInDestinationColumn + CountBlocksAtAndAboveSubject(goal.Block()));
+}
+
+int State::CountBlocksAtAndAboveSubject(int block)
+{
+	for (int i = 0; i < size * size; i++)
+	{
+		if (internalState[i] == block)
+		{
+			int col = i / size;
+			return CountBlocksAtAndAbove(col, (i % size));
+		}
+	}
+}
+
+
 
 #pragma endregion
 

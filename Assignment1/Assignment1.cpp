@@ -1,18 +1,15 @@
-// Assignment1.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
+#pragma once
 #include <iostream>
-#include "Action.h"
+
 #include "State.h"
 #include "Goal.h"
 #include "Solver.h"
-#include <time.h>
+
 
 using namespace std;
 
 int main()
 {
-    srand(time(NULL));
     std::cout << "Assignment 1 --- Data Structures and Algorithms.\n";
     State test = State(3, 6);
     cout << "First board" << endl;
@@ -32,6 +29,6 @@ int main()
     cin >> row;
 
     Goal goal = Goal(target, column, row);
-    Solver solver = Solver(goal, test, 4000);
+    Solver solver = Solver(goal, test);
 
 }

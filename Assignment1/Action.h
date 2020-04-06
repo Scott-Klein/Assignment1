@@ -1,5 +1,7 @@
 #pragma once
-//#include "State.h"
+#include <iostream>
+
+using namespace std;
 
 class Action
 {
@@ -11,44 +13,57 @@ public:
 	{
 		this->colFrom = from;
 		this->colTo = to;
-
 	}
 
-	bool operator== (const Action &rhs);
-	bool operator!= (const Action &rhs);
-	bool IsInverseAction(Action action);
-	int GetFrom();
-	int GetTo();
-	void PrintMove();
-	bool Empty();
-protected:
+	bool operator==(const Action& rhs)
+	{
+		if (colFrom == rhs.colFrom && colTo == rhs.colTo)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	bool operator!=(const Action& rhs)
+	{
+		return !(*this == rhs);
+	}
+	bool IsInverseAction(Action action)
+	{
+		if (this->colFrom == action.GetTo() && this->colTo == action.GetFrom())
+		{
+			return true;
+		}
+		return false;
+	}
+
+	int GetFrom()
+	{
+		return this->colFrom;
+	}
+
+	int GetTo()
+	{
+		return this->colTo;
+	}
+
+
+	void PrintMove()
+	{
+		cout << "Move from " << colFrom << " to " << colTo << endl;
+	}
+	bool Empty()
+	{
+		if (colFrom < 0 || colTo < 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 };
 
-bool Action::Empty()
-{
-	if (colFrom < 0 || colTo < 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool Action::operator==(const Action& rhs)
-{
-	if (colFrom == rhs.colFrom && colTo == rhs.colTo)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-inline bool Action::operator!=(const Action& rhs)
-{
-	return !(*this == rhs);
-}

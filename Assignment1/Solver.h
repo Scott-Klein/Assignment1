@@ -22,13 +22,3 @@ private:
 protected:
 };
 
-bool Solver::unWindMoves(State endState)
-{
-	State current = endState;
-	while (!current.GetLastMove().Empty())
-	{
-		goalPath.push(current.GetLastMove());
-		current = *(current.GetPreviousState());
-	}
-	return true;
-}
