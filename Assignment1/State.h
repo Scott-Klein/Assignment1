@@ -23,11 +23,11 @@ public:
 	void CalculateHeuristic(Goal goal);
 	int GetFinalvalue()
 	{
-		return heuristic + Distance;
+		return heuristic + distance;
 	}
 	int BlockAt(int column, int row);
 	vector<State> GetNeighbours();
-	int Distance;
+
 
 	int GetHeuristicValue()
 	{
@@ -39,6 +39,7 @@ private:
 	int size;
 	int numbers;
 	int heuristic;
+	int distance;
 	vector<int> candidatePositioins;
 	vector<Action> actions;
 

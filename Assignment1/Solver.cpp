@@ -28,8 +28,6 @@ bool Solver::Search()
 
 	vector<State> closeSet;
 
-	state.CalculateHeuristic();
-
 	while (!openSet.empty())
 	{
 		State current = openSet.top();

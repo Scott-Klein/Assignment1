@@ -19,7 +19,7 @@ State::State(int n, int k)
 		size = 3;
 	}
 	numbers = k;
-	Distance = 0;
+	distance = 0;
 	InitialiseInternalState();
 }
 
@@ -37,7 +37,7 @@ State::State(State* parent, Action action)
 	this->internalState = parent->CopyInternalState();
 	this->size = parent->BoardSize();
 	this->MoveColumn(action.GetFrom(), action.GetTo());
-	this->Distance = parent->Distance + 1;
+	this->distance = parent->distance + 1;
 }
 
 
@@ -252,9 +252,9 @@ void State::PrintLegalActions()
 {
 	while (!actions.empty())
 	{
-		auto action = actions.top();
-		action.PrintMove();
-		actions.pop();
+		//auto action = actions.top();
+		//action.PrintMove();
+		//actions.pop();
 	}
 }
 
