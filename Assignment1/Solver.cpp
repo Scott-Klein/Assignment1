@@ -35,7 +35,7 @@ bool Solver::Search()
 		auto result = closedSet.insert(current);// > IS happening here fuck!!! I NEED TO ROLL MY OWN CONTAINER
 		if (!result.second)
 		{
-			cout << "Some shits fucked" << endl;
+			cout << "Some shits not right" << endl;
 		}
 		vector<State> neighbours = current.GetNeighbours();
 		for (int i = 0; i < neighbours.size(); i++)
@@ -45,14 +45,11 @@ bool Solver::Search()
 			{
 				continue;
 			}
-
 			if (neighbour.GoalAccomplished(goal))
 			{
 				return unWindMoves(neighbour);
 			}
-
 			neighbour.CalculateHeuristic(goal);
-
 			openSet.push(neighbour);
 		}
 	}
