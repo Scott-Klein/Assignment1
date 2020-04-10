@@ -3,6 +3,8 @@
 #include "Solver.h"
 #include <iostream>
 #include <set>
+#include "Node.h"
+
 using namespace std;
 
 Solver::Solver(Goal goal, State* state)
@@ -25,18 +27,17 @@ bool Solver::Success()
 
 bool Solver::Search()
 {
-	auto closedCmp = [](State* a, State* b) { return a->GetHash() > b->GetHash(); };
-	auto openCmp = [](State* a, State* b) { return a->GetFinalvalue() > b->GetFinalvalue(); };
-
-	priority_queue<State*> openSet;
-	set<State*, decltype(closedCmp)> closedSet;
-	openSet.push(state);
+	auto cmp = [](State* a, State* b) { return a->GetHash() > b->GetHash(); };
+	priority_queue<Node> openSet;
+	set<State*, decltype(cmp)> closedSet;
+	openSet.push(Node(state));
 
 	while (!openSet.empty())
 	{
-		State* current = openSet.top();
+		Node currentNode = openSet.top();
+		State* current = currentNode.GetData();
 		openSet.pop();
-		closedSet.insert(current);// > IS happening here fuck!!! I NEED TO ROLL MY OWN CONTAINER
+		closedSet.insert(current);
 		vector<State*> neighbours = current->GetNeighbours();
 		for (int i = 0; i < neighbours.size(); i++)
 		{
@@ -50,7 +51,7 @@ bool Solver::Search()
 				return unWindMoves(neighbour);
 			}
 			neighbour->CalculateHeuristic(goal);
-			openSet.push(neighbour);
+			openSet.push(Node(neighbour, current));
 		}
 	}
 

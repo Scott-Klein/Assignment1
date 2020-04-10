@@ -27,7 +27,8 @@ public:
 	int BoardSize();
 	int* CopyInternalState();
 	int LegalNeighbourCount();
-	bool MoveColumn(int from, int to);
+	bool Move(int from, int to);
+	bool Move(Action action);
 	void CalculateHeuristic(Goal goal);
 
 	int BlockAt(int column, int row);

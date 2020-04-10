@@ -41,7 +41,7 @@ State::State(State* parent, Action action)
 	this->previousMove = action;
 	this->internalState = parent->CopyInternalState();
 	this->size = parent->BoardSize();
-	this->MoveColumn(action.GetFrom(), action.GetTo());
+	this->Move(action.GetFrom(), action.GetTo());
 	this->distance = parent->distance + 1;
 }
 
@@ -154,7 +154,7 @@ void State::DropColumn(int* column)
 	}
 }
 
-bool State::MoveColumn(int from, int to)
+bool State::Move(int from, int to)
 {
 	if (TopOfColumnClear(to))
 	{
@@ -170,8 +170,10 @@ bool State::MoveColumn(int from, int to)
 
 }
 
-
-
+bool State::Move(Action action)
+{
+	return Move(action.GetFrom(), action.GetTo());
+}
 
 int State::BlockAt(int column, int row)
 {

@@ -30,5 +30,12 @@ int main()
 
     Goal goal = Goal(target, column, row);
     Solver solver = Solver(goal, test);
-
+    auto winningMoves = solver.GetWinningMoves();
+    while (!winningMoves.empty())
+    {
+        test->Move(winningMoves.top());
+        winningMoves.top().PrintMove();
+        winningMoves.pop();
+        test->Print();
+    }
 }

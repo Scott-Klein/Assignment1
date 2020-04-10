@@ -5,6 +5,7 @@
 #include <vector>
 #include "State.h"
 #include "Action.h"
+#include "Node.h"
 
 class Solver
 {
@@ -12,6 +13,10 @@ public:
 	Solver(Goal goal, State* state);
 	Solver();
 	bool Success();
+	stack<Action> GetWinningMoves()
+	{
+		return this->goalPath;
+	}
 private:
 	Goal goal;
 	State* state;
