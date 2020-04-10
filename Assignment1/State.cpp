@@ -101,13 +101,13 @@ bool State::GoalAccomplished(Goal goal)
 	}
 }
 
-vector<State> State::GetNeighbours()
+vector<State*> State::GetNeighbours()
 {
-	vector<State> result;
+	vector<State*> result;
 	GeneratePossibleActions();
 	for (int i = 0; i < this->actions.size(); i++)
 	{
-		result.push_back(State(this, actions[i]));
+		result.push_back(new State(this, actions[i]));
 	}
 	return result;
 }
@@ -359,16 +359,17 @@ bool operator<(const State& lhs, const State& rhs)
 	if (lhs.hash == rhs.hash)
 	{
 		bool isAlright = true;
-		for (int i = 0; i < lhs.size* lhs.size; i++)
+		for (int i = 0; i < lhs.size * lhs.size; i++)
 		{
 			if (lhs.internalState[i] != rhs.internalState[i])
 			{
 				isAlright = false;
+				
 			}
 		}
 		return false;
 	}
-	return ((lhs.distance + rhs.heuristic) > (rhs.distance + rhs.heuristic));
+	return ((lhs.distance + lhs.heuristic) > (rhs.distance + rhs.heuristic));
 }
 
 void State::CalculateHeuristic(Goal goal)

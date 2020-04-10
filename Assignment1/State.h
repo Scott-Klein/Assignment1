@@ -11,13 +11,17 @@ using namespace std;
 class State
 {
 public:
+
 	friend bool operator<(const State& lhs, const State& rhs);
+
 	bool operator==(const State& rhs) const { 
 		return true;
 	}
+
 	State(int n, int k);
 	State();
 	State(State* parent, Action action);
+
 	void Print();
 	void OutputLegalActions();
 	int BoardSize();
@@ -30,7 +34,7 @@ public:
 
 	bool GoalAccomplished(Goal goal);
 
-	vector<State> GetNeighbours();
+	vector<State*> GetNeighbours();
 
 	Action GetLastMove()
 	{
@@ -50,6 +54,11 @@ public:
 	int GetFinalvalue()
 	{
 		return heuristic + distance;
+	}
+
+	int GetHash()
+	{
+		return hash;
 	}
 private:
 	//vars

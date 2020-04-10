@@ -9,16 +9,16 @@
 class Solver
 {
 public:
-	Solver(Goal goal, State state);
+	Solver(Goal goal, State* state);
 	Solver();
 	bool Success();
 private:
 	Goal goal;
-	State state;
+	State* state;
 	stack<Action> goalPath;
 	bool Search();
 	bool found;
-	bool unWindMoves(State endState);
+	bool unWindMoves(State* endState);
 protected:
 };
 

@@ -5,7 +5,7 @@
 #include <set>
 using namespace std;
 
-Solver::Solver(Goal goal, State state)
+Solver::Solver(Goal goal, State* state)
 {
 	this->state = state;
 	this->goal = goal;
@@ -25,31 +25,31 @@ bool Solver::Success()
 
 bool Solver::Search()
 {
-	priority_queue<State> openSet;
+	auto closedCmp = [](State* a, State* b) { return a->GetHash() > b->GetHash(); };
+	auto openCmp = [](State* a, State* b) { return a->GetFinalvalue() > b->GetFinalvalue(); };
+
+	priority_queue<State*> openSet;
+	set<State*, decltype(closedCmp)> closedSet;
 	openSet.push(state);
-	set<State> closedSet;
+
 	while (!openSet.empty())
 	{
-		State current = openSet.top();
+		State* current = openSet.top();
 		openSet.pop();
-		auto result = closedSet.insert(current);// > IS happening here fuck!!! I NEED TO ROLL MY OWN CONTAINER
-		if (!result.second)
-		{
-			cout << "Some shits not right" << endl;
-		}
-		vector<State> neighbours = current.GetNeighbours();
+		closedSet.insert(current);// > IS happening here fuck!!! I NEED TO ROLL MY OWN CONTAINER
+		vector<State*> neighbours = current->GetNeighbours();
 		for (int i = 0; i < neighbours.size(); i++)
 		{
-			State neighbour = neighbours[i];
-			if (closedSet.find(neighbour) != closedSet.end()) //if neighbour is in closeSet, then continue.
+			State* neighbour = neighbours[i];
+			if (closedSet.find(neighbour) != closedSet.end()) //if neighbour is in closeSet, then skip this run
 			{
 				continue;
 			}
-			if (neighbour.GoalAccomplished(goal))
+			if (neighbour->GoalAccomplished(goal))
 			{
 				return unWindMoves(neighbour);
 			}
-			neighbour.CalculateHeuristic(goal);
+			neighbour->CalculateHeuristic(goal);
 			openSet.push(neighbour);
 		}
 	}
@@ -57,13 +57,13 @@ bool Solver::Search()
 	return false;
 }
 
-bool Solver::unWindMoves(State endState)
+bool Solver::unWindMoves(State* endState)
 {
-	State current = endState;
-	while (!current.GetLastMove().Empty())
+	State* current = endState;
+	while (!current->GetLastMove().Empty())
 	{
-		goalPath.push(current.GetLastMove());
-		current = *(current.GetPreviousState());
+		goalPath.push(current->GetLastMove());
+		current = current->GetPreviousState();
 	}
 	return true;
 }

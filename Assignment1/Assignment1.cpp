@@ -11,9 +11,9 @@ using namespace std;
 int main()
 {
     std::cout << "Assignment 1 --- Data Structures and Algorithms.\n";
-    State test = State(3, 6);
+    State* test = new State(3, 6);
     cout << "First board" << endl;
-    test.Print();
+    test->Print();
     int target, column, row;
 
     cout << "Please choose a block to target" << endl;
