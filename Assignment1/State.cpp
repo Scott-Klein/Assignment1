@@ -7,10 +7,7 @@
 #include <vector>
 #include <list>
 
-
 using namespace std;
-
-
 
 State::State(int n, int k)
 {

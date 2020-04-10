@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="Assignment1.cpp" />
     <ClCompile Include="node.cpp" />
+    <ClCompile Include="Options.cpp" />
     <ClCompile Include="Solver.cpp" />
     <ClCompile Include="State.cpp" />
   </ItemGroup>
@@ -157,6 +158,7 @@
     <ClInclude Include="Action.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="node.h" />
+    <ClInclude Include="Options.h" />
     <ClInclude Include="Solver.h" />
     <ClInclude Include="State.h" />
   </ItemGroup>

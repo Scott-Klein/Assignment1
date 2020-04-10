@@ -4,13 +4,20 @@
 #include "State.h"
 #include "Goal.h"
 #include "Solver.h"
-
+#include "Options.h"
 
 using namespace std;
+
+Options ConfigureSolver(Options opt);
 
 int main()
 {
     std::cout << "Assignment 1 --- Data Structures and Algorithms.\n";
+
+    Options options;
+    
+
+
     State* test = new State(3, 6);
     cout << "First board" << endl;
     test->Print();
@@ -38,4 +45,12 @@ int main()
         winningMoves.pop();
         test->Print();
     }
+}
+
+
+Options ConfigureSolver()
+{
+    Options opt;
+
+    return opt;
 }
