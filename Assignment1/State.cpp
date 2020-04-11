@@ -1,11 +1,8 @@
 #pragma once
-
 #include "State.h"
-#include <iostream>
-#include <stack>
-#include <time.h>
-#include <vector>
+#include "Action.h"
 #include <list>
+#include <time.h>
 
 using namespace std;
 
@@ -22,6 +19,7 @@ State::State(int n, int k)
 	numbers = k;
 	distance = 0;
 	InitialiseInternalState();
+	Print();
 }
 
 State::State()
@@ -41,7 +39,6 @@ State::State(State* parent, Action action)
 	this->Move(action.GetFrom(), action.GetTo());
 	this->distance = parent->distance + 1;
 }
-
 
 #pragma region PublicFunctions
 
@@ -63,8 +60,6 @@ void State::OutputLegalActions()
 	PrintLegalActions();
 }
 
-
-
 int State::BoardSize()
 {
 	return this->size;
@@ -81,14 +76,52 @@ int* State::CopyInternalState()
 	return newState;
 }
 
-int State::LegalNeighbourCount()
-{
-	return 4;
-}
 
 bool State::GoalAccomplished(Goal goal)
 {
-	if (BlockAt(goal.Column(), goal.Row()) == goal.Block())
+	if (goal.GetType() == SOLVERTYPE_ATOMIC)
+	{
+		return CheckAtomicGoal(goal);
+	}
+	else if (goal.GetType() == SOLVERTYPE_CONJUNCTIVE)
+	{
+		return CheckConjunctiveGoal(goal);
+	}
+	else if (goal.GetType() == SOLVERTYPE_DISJUNCTIVE)
+	{
+		return CheckDisjunctiveGoal(goal);
+	}
+}
+
+bool State::CheckDisjunctiveGoal(Goal& goal)
+{
+	for (int i = 0; i < goal.Count(); i++)
+	{
+		if (BlockAt(goal.Column(i), goal.Row(i)) == goal.Block(i))
+		{
+			goal.DisjunctiveSuccess(i);
+			return true;
+		}
+	}
+	return false; // All goals were missed.
+}
+
+bool State::CheckConjunctiveGoal(Goal& goal)
+{
+	for (int i = 0; i < goal.Count(); i++)
+	{
+		if (BlockAt(goal.Column(i), goal.Row(i)) != goal.Block(i))
+		{
+			return false;
+		}
+	}
+	return true; // can only hit here if all goals were met.
+}
+
+bool State::CheckAtomicGoal(Goal& goal)
+{
+	int atomicGoal = 0;
+	if (BlockAt(goal.Column(atomicGoal), goal.Row(atomicGoal)) == goal.Block(atomicGoal))
 	{
 		return true;
 	}
@@ -177,8 +210,6 @@ int State::BlockAt(int column, int row)
 	return this->internalState[column * size + row];
 }
 
-
-
 int State::RemoveTop(int from)
 {
 	int* column = GetColumn(from);
@@ -206,7 +237,6 @@ bool State::CanDoAction(Action action)
 	{
 		return false;
 	}
-
 	return (TopOfColumnClear(action.GetTo()) && !ColumnEmpty(action.GetFrom()));
 }
 
@@ -283,7 +313,13 @@ int State::GetNewRandom()
 
 void State::PrintFirstLine()
 {
-	cout << " ";
+	cout << endl << "    ";
+	for (int i = 0; i < size; i++)
+	{
+		cout << "-" << i << "- ";
+	}
+	cout << endl;
+	cout << "    ";
 	for (int i = 0; i < size; i++)
 	{
 		cout << "--- ";
@@ -295,6 +331,7 @@ void State::PrintAllRows()
 {
 	for (int i = 0; i < size; i++)
 	{
+		cout << i << "  ";
 		for (int j = 0; j < (size * size); j += size)
 		{
 			cout << "| " << internalState[i + j] << " ";
@@ -305,7 +342,7 @@ void State::PrintAllRows()
 
 void State::PrintLastLine()
 {
-	cout << " ";
+	cout << "    ";
 	for (int i = 0; i < size; i++)
 	{
 		cout << "--- ";
@@ -357,15 +394,6 @@ bool operator<(const State& lhs, const State& rhs)
 {
 	if (lhs.hash == rhs.hash)
 	{
-		bool isAlright = true;
-		for (int i = 0; i < lhs.size * lhs.size; i++)
-		{
-			if (lhs.internalState[i] != rhs.internalState[i])
-			{
-				isAlright = false;
-				
-			}
-		}
 		return false;
 	}
 	return ((lhs.distance + lhs.heuristic) > (rhs.distance + rhs.heuristic));
@@ -373,10 +401,50 @@ bool operator<(const State& lhs, const State& rhs)
 
 void State::CalculateHeuristic(Goal goal)
 {
-	int blocksInDestinationColumn = 0;
+	if (goal.GetType() == SOLVERTYPE_ATOMIC)
+	{
+		int atomicGoal = 0;
+		heuristic = GoalDistance(goal, atomicGoal);
+	}
+	else if (goal.GetType() == SOLVERTYPE_CONJUNCTIVE)
+	{
+		CombinedGoalHeuristic(goal);
+	}
+	else if (goal.GetType() == SOLVERTYPE_DISJUNCTIVE)
+	{
+		NearestGoalHeuristic(goal);
+	}
+}
 
-	blocksInDestinationColumn = CountBlocksAtAndAbove(goal.Column(), goal.Row());
-	heuristic = (blocksInDestinationColumn + CountBlocksAtAndAboveSubject(goal.Block()));
+void State::CombinedGoalHeuristic(Goal& goal)
+{
+	int total = 0;
+	for (int i = 0; i < goal.Count(); i++)
+	{
+		total += GoalDistance(goal, i);
+	}
+	heuristic = total;
+}
+
+void State::NearestGoalHeuristic(Goal& goal)
+{
+	int min = 0;
+	for (int i = 0; i < goal.Count(); i++)
+	{
+		int current = GoalDistance(goal, i);
+		if (current < min)
+		{
+			min = current;
+		}
+	}
+	heuristic = min;
+}
+
+int State::GoalDistance(Goal goal, int i)
+{
+	int firstGoal = 0;
+	int blocksInDestinationColumn = CountBlocksAtAndAbove(goal.Column(firstGoal), goal.Row(firstGoal));
+	return (blocksInDestinationColumn + CountBlocksAtAndAboveSubject(goal.Block(firstGoal)));
 }
 
 int State::CountBlocksAtAndAboveSubject(int block)

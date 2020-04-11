@@ -1,6 +1,7 @@
 #pragma once
-#include "state.h"
+#include "State.h"
 #include "Action.h"
+
 class Node
 {
 public:

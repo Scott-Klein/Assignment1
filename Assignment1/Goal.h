@@ -1,46 +1,61 @@
 #pragma once
-//#include "State.h"
+#include <iostream>
+#include "SolverType.h"
+#include <vector>
+using namespace std;
 
 class Goal
 {
 public:
-	Goal();
-	Goal(int k, int n)
+	Goal()
 	{
-		while (block < 1 || block > k )
+	}
+
+	Goal(int k, int n, SolverType type)
+	{
+		this->type = type;
+		if (type != SOLVERTYPE_ATOMIC)
 		{
-			cout << "Please choose a block to target" << endl;
-			cin >> block;
-		}
-		while (column > n-1 || column < 0)
-		{
-			cout << "Please choose a column you want to deposit" << endl;
-			cin >> column;
-		}
-		while (row > n-1 || row < 0)
-		{
-			cout << "Please choose the row you want the block to reach" << endl;
-			cin >> row;
+			int input = 1;
+			while (input > 0)
+			{
+				CollectNewGoal(k,n);
+				cout << "Input a positive number if you'd like to enter another goal:" << endl;
+				cin >> input;
+			}
 		}
 	}
-
-	int Block()
+	int Block(int i)
 	{
-		return this->block;
+		return blocks[i];
 	}
 
-	int Column()
+	int Column(int i)
 	{
-		return this->column;
+		return columns[i];
 	}
 
-	int Row()
+	int Row(int i)
 	{
-		return this->row;
+		return rows[i];
 	}
 
+	SolverType GetType()
+	{
+		return type;
+	}
+
+	int Count()
+	{
+		return blocks.size();
+	}
+	void DisjunctiveSuccess(int i);
+	void Print();
 private:
-	int block, column, row;
+	SolverType type;
+	void CollectNewGoal(int k, int n);
+	vector<int> blocks, rows, columns;
+	int disjunctiveSuccess;
 protected:
 };
 

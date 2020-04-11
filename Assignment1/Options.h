@@ -1,6 +1,8 @@
 #pragma once
-#include "SolverType.h"
+#include "State.h"
 #include "Goal.h"
+#include "SolverType.h"
+
 class Options
 {
 public:
@@ -12,18 +14,29 @@ public:
 			QueryNumbers();
 			QuerySize();
 		}
-		goal = Goal(Numbers, Size);
+		initialState = new State(Size, Numbers);
+		goal = Goal(Numbers, Size, Type);
 	}
-	void QueryType();
-	void QueryNumbers();
-	void QuerySize();
-	bool ValidateOptions();
+
+	State* GetState()
+	{
+		return initialState;
+	}
+	Goal GetGoal()
+	{
+		return goal;
+	}
+
 private:
 	Goal goal;
 	int Size;
 	int Numbers;
 	SolverType Type;
-
+	State* initialState;
+	void QueryType();
+	void QueryNumbers();
+	void QuerySize();
+	bool ValidateOptions();
 	void PrintOptions();
 };
 

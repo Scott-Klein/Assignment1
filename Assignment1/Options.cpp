@@ -1,5 +1,6 @@
 ﻿#include "Options.h"
 #include <iostream>
+#include "SolverType.h"
 
 using namespace std;
 
@@ -15,13 +16,13 @@ void Options::QueryType()
 	switch (input)
 	{
 	case 1:
-		Type = Single;
+		Type = SOLVERTYPE_ATOMIC;
 		break;
 	case 2:
-		Type = Multiple_Disjunctive;
+		Type = SOLVERTYPE_DISJUNCTIVE;
 		break;
 	case 3:
-		Type = Multiple_Conjunctive;
+		Type = SOLVERTYPE_CONJUNCTIVE;
 		break;
 	default:
 		cout << "FATAL ERROR CANNOT RECOVER" << endl;
@@ -40,8 +41,6 @@ void Options::QueryNumbers()
 		cin >> k;
 	}
 	Numbers = k;
-
-	
 }
 
 void Options::QuerySize()
@@ -58,14 +57,13 @@ void Options::QuerySize()
 
 bool Options::ValidateOptions()
 {
-	if (Size > 2 && Size <= Numbers && Numbers <= Size*Size - Size)
+	if (Size > 2 && Size <= Numbers && Numbers <= ((Size*Size) - Size))
 	{
 		return true;
 	}
 	else
 	{
-		cout << "Invalid options: Rules are that n>2 and n≤k≤n2–n." << endl;
-		cout << "n = size" << endl << "k = numbers";
+		cout << "Invalid options: Board size must be greater than 3, the number of blocks must be between n and n^2-n" << endl;
 		return false;
 	}
 }

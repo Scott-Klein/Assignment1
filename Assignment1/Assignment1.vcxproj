@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Assignment1.cpp" />
+    <ClCompile Include="Goal.cpp" />
     <ClCompile Include="node.cpp" />
     <ClCompile Include="Options.cpp" />
     <ClCompile Include="Solver.cpp" />

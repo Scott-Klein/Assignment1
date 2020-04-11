@@ -1,22 +1,13 @@
 #pragma once
 #include <vector>
-#include <list>
-#include <stack>
-#include <queue>
 #include "Goal.h"
 #include "Action.h"
-
 using namespace std;
 
 class State
 {
 public:
-
 	friend bool operator<(const State& lhs, const State& rhs);
-
-	bool operator==(const State& rhs) const { 
-		return true;
-	}
 
 	State(int n, int k);
 	State();
@@ -26,14 +17,23 @@ public:
 	void OutputLegalActions();
 	int BoardSize();
 	int* CopyInternalState();
-	int LegalNeighbourCount();
 	bool Move(int from, int to);
 	bool Move(Action action);
 	void CalculateHeuristic(Goal goal);
 
+	void CombinedGoalHeuristic(Goal& goal);
+
+	void NearestGoalHeuristic(Goal& goal);
+
 	int BlockAt(int column, int row);
 
 	bool GoalAccomplished(Goal goal);
+
+	bool CheckDisjunctiveGoal(Goal& goal);
+
+	bool CheckConjunctiveGoal(Goal& goal);
+
+	bool CheckAtomicGoal(Goal& goal);
 
 	vector<State*> GetNeighbours();
 
@@ -96,6 +96,7 @@ private:
 	int CountBlocksAtAndAboveSubject(int block);
 	int GetNewRandom();
 	int RemoveTop(int from);
+	int GoalDistance(Goal goal, int i);
 protected:
 };
 

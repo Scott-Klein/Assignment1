@@ -2,7 +2,7 @@
 
 enum SolverType
 {
-	Single,
-	Multiple_Disjunctive,
-	Multiple_Conjunctive
+	SOLVERTYPE_ATOMIC,
+	SOLVERTYPE_DISJUNCTIVE,
+	SOLVERTYPE_CONJUNCTIVE
 };

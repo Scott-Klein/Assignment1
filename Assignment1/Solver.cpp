@@ -1,28 +1,38 @@
 #pragma once
-
 #include "Solver.h"
-#include <iostream>
+#include "State.h"
+#include "Options.h"
+#include "Goal.h"
+#include "node.h"
+#include <queue>
 #include <set>
-#include "Node.h"
 
 using namespace std;
 
-Solver::Solver(Goal goal, State* state)
+Solver::Solver(Options options)
 {
-	this->state = state;
-	this->goal = goal;
+	state = options.GetState();
+	goal = options.GetGoal();
 
 	this->found = Search();
 }
 
-Solver::Solver()
-{
-	//TODO: Implement input gathering
-}
 
 bool Solver::Success()
 {
 	return this->found;
+}
+
+void Solver::PrintWinningMoves()
+{
+	while (!goalPath.empty())
+	{
+		state->Move(goalPath.top());
+		goalPath.top().PrintMove();
+		goalPath.pop();
+		state->Print();
+	}
+	goal.Print();
 }
 
 bool Solver::Search()
@@ -54,7 +64,6 @@ bool Solver::Search()
 			openSet.push(Node(neighbour, current));
 		}
 	}
-
 	return false;
 }
 
