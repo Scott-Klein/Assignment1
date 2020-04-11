@@ -8,8 +8,6 @@
 
 using namespace std;
 
-Options ConfigureSolver(Options opt);
-
 int main()
 {
     std::cout << "Assignment 1 --- Data Structures and Algorithms.\n";
@@ -47,10 +45,3 @@ int main()
     }
 }
 
-
-Options ConfigureSolver()
-{
-    Options opt;
-
-    return opt;
-}

@@ -1,8 +1,29 @@
 #pragma once
-struct Options
+#include "SolverType.h"
+#include "Goal.h"
+class Options
 {
-	int size;
-	int numbers;
+public:
+	Options()
+	{
+		while (!ValidateOptions())
+		{
+			QueryType();
+			QueryNumbers();
+			QuerySize();
+		}
+		goal = Goal(Numbers, Size);
+	}
+	void QueryType();
+	void QueryNumbers();
+	void QuerySize();
+	bool ValidateOptions();
+private:
+	Goal goal;
+	int Size;
+	int Numbers;
+	SolverType Type;
 
+	void PrintOptions();
 };
 

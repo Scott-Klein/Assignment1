@@ -4,15 +4,24 @@
 class Goal
 {
 public:
-	Goal(int block, int column, int row)
+	Goal();
+	Goal(int k, int n)
 	{
-		this->block = block;
-		this->column = column;
-		this->row = row;
-	}
-
-	Goal()
-	{
+		while (block < 1 || block > k )
+		{
+			cout << "Please choose a block to target" << endl;
+			cin >> block;
+		}
+		while (column > n-1 || column < 0)
+		{
+			cout << "Please choose a column you want to deposit" << endl;
+			cin >> column;
+		}
+		while (row > n-1 || row < 0)
+		{
+			cout << "Please choose the row you want the block to reach" << endl;
+			cin >> row;
+		}
 	}
 
 	int Block()
