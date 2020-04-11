@@ -13,7 +13,7 @@ public:
 
 	Goal(int k, int n, SolverType type)
 	{
-		this->type = type;
+		this->goalType = type;
 		if (type != SOLVERTYPE_ATOMIC)
 		{
 			int input = 1;
@@ -42,7 +42,7 @@ public:
 
 	SolverType GetType()
 	{
-		return type;
+		return goalType;
 	}
 
 	int Count()
@@ -52,10 +52,11 @@ public:
 	void DisjunctiveSuccess(int i);
 	void Print();
 private:
-	SolverType type;
+	SolverType goalType;
 	void CollectNewGoal(int k, int n);
 	vector<int> blocks, rows, columns;
-	int disjunctiveSuccess;
+	int disjunctiveSuccessIndex;
+	void goalLineDisplay(int column, int row, int block);
 protected:
 };
 

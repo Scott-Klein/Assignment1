@@ -19,21 +19,21 @@ public:
 	int* CopyInternalState();
 	bool Move(int from, int to);
 	bool Move(Action action);
-	void CalculateHeuristic(Goal goal);
+	void CalculateHeuristic(Goal* goal);
 
-	void CombinedGoalHeuristic(Goal& goal);
+	void CombinedGoalHeuristic(Goal* goal);
 
-	void NearestGoalHeuristic(Goal& goal);
+	void NearestGoalHeuristic(Goal* goal);
 
 	int BlockAt(int column, int row);
 
-	bool GoalAccomplished(Goal goal);
+	bool GoalAccomplished(Goal* goal);
 
-	bool CheckDisjunctiveGoal(Goal& goal);
+	bool CheckDisjunctiveGoal(Goal* goal);
 
-	bool CheckConjunctiveGoal(Goal& goal);
+	bool CheckConjunctiveGoal(Goal* goal);
 
-	bool CheckAtomicGoal(Goal& goal);
+	bool CheckAtomicGoal(Goal* goal);
 
 	vector<State*> GetNeighbours();
 
@@ -96,7 +96,7 @@ private:
 	int CountBlocksAtAndAboveSubject(int block);
 	int GetNewRandom();
 	int RemoveTop(int from);
-	int GoalDistance(Goal goal, int i);
+	int GoalDistance(Goal* goal, int i);
 protected:
 };
 

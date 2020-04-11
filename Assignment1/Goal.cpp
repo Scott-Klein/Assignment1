@@ -2,14 +2,21 @@
 
 void Goal::DisjunctiveSuccess(int i)
 {
-	disjunctiveSuccess = i;
+	disjunctiveSuccessIndex = i;
 }
 
 void Goal::Print()
 {
-	for (int i = 0; i < Count(); i++)
+	if (goalType == SOLVERTYPE_ATOMIC || goalType == SOLVERTYPE_CONJUNCTIVE)
 	{
-		cout << "Goal to move " << blocks[i] << " to column " << columns[i] << ", row " << rows[i] << " fullfilled" << endl;
+		for (int i = 0; i < Count(); i++)
+		{
+			goalLineDisplay(columns[i], rows[i], blocks[i]);
+		}
+	}
+	else
+	{
+		goalLineDisplay(columns[disjunctiveSuccessIndex], rows[disjunctiveSuccessIndex], blocks[disjunctiveSuccessIndex]);
 	}
 }
 
@@ -34,4 +41,9 @@ void Goal::CollectNewGoal(int k, int n)
 	blocks.push_back(block);
 	rows.push_back(row);
 	columns.push_back(column);
+}
+
+void Goal::goalLineDisplay(int column, int row, int block)
+{
+	cout << "Goal to move " << block << " to column " << column << ", row " << row << " fullfilled" << endl;
 }

@@ -26,10 +26,12 @@ public:
 			return false;
 		}
 	}
+
 	bool operator!=(const Action& rhs)
 	{
 		return !(*this == rhs);
 	}
+
 	bool IsInverseAction(Action action)
 	{
 		if (this->colFrom == action.GetTo() && this->colTo == action.GetFrom())
@@ -49,11 +51,11 @@ public:
 		return this->colTo;
 	}
 
-
 	void PrintMove()
 	{
-		cout << "Move from " << colFrom << " to " << colTo << endl;
+		cout << "    Move from " << colFrom << " to " << colTo << endl;
 	}
+
 	bool Empty()
 	{
 		if (colFrom < 0 || colTo < 0)

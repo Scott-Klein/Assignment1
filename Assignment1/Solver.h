@@ -17,7 +17,7 @@ public:
 	}
 	void PrintWinningMoves();
 private:
-	Goal goal;
+	Goal* goal;
 	State* state;
 	stack<Action> goalPath;
 	bool Search();

@@ -15,20 +15,20 @@ public:
 			QuerySize();
 		}
 		initialState = new State(Size, Numbers);
-		goal = Goal(Numbers, Size, Type);
+		goal = new Goal(Numbers, Size, Type);
 	}
 
 	State* GetState()
 	{
 		return initialState;
 	}
-	Goal GetGoal()
+
+	Goal* GetGoal()
 	{
 		return goal;
 	}
-
 private:
-	Goal goal;
+	Goal* goal;
 	int Size;
 	int Numbers;
 	SolverType Type;

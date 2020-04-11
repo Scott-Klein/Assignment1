@@ -17,7 +17,6 @@ Solver::Solver(Options options)
 	this->found = Search();
 }
 
-
 bool Solver::Success()
 {
 	return this->found;
@@ -32,7 +31,7 @@ void Solver::PrintWinningMoves()
 		goalPath.pop();
 		state->Print();
 	}
-	goal.Print();
+	goal->Print();
 }
 
 bool Solver::Search()

@@ -10,7 +10,7 @@ void Options::QueryType()
 	int input = 0;
 	while (input != 1 && input != 2 && input != 3)
 	{
-		cout << "Mode (1 - 3):";
+		cout << "Mode (1 - 3): ";
 		cin >> input;
 	}
 	switch (input)
@@ -37,7 +37,7 @@ void Options::QueryNumbers()
 	int k = 2;
 	while (k < 3)
 	{
-		cout << "Tokens (3+):";
+		cout << "Tokens (3+): ";
 		cin >> k;
 	}
 	Numbers = k;
@@ -49,7 +49,7 @@ void Options::QuerySize()
 	int n = 2;
 	while (n < 3)
 	{
-		cout << "Size (3+):";
+		cout << "Size (3+): ";
 		cin >> n;
 	}
 	Size = n;
