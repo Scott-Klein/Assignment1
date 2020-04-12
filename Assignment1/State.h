@@ -19,21 +19,21 @@ public:
 	int* CopyInternalState();
 	bool Move(int from, int to);
 	bool Move(Action action);
-	void CalculateHeuristic(Goal* goal);
+	void CalculateHeuristic();
 
-	void CombinedGoalHeuristic(Goal* goal);
+	void CombinedGoalHeuristic(int goalIndex);
 
-	void NearestGoalHeuristic(Goal* goal);
+	void NearestGoalHeuristic();
 
 	int BlockAt(int column, int row);
 
-	bool GoalAccomplished(Goal* goal);
+	bool GoalAccomplished();
 
-	bool CheckDisjunctiveGoal(Goal* goal);
+	bool CheckDisjunctiveGoal();
 
-	bool CheckConjunctiveGoal(Goal* goal);
+	bool CheckConjunctiveGoal();
 
-	bool CheckAtomicGoal(Goal* goal);
+	bool CheckAtomicGoal();
 
 	vector<State*> GetNeighbours();
 
@@ -61,6 +61,14 @@ public:
 	{
 		return hash;
 	}
+	Goal* GetGoal()
+	{
+		return goal;
+	}
+	void SetGoal(Goal* goal)
+	{
+		this->goal = goal;
+	}
 private:
 	//vars
 	int* internalState;
@@ -73,6 +81,7 @@ private:
 	vector<int> candidatePositioins;
 	vector<Action> actions;
 	State* previous;
+	Goal* goal;
 	//funcs
 	void PrintFirstLine();
 	void PrintAllRows();
@@ -96,7 +105,9 @@ private:
 	int CountBlocksAtAndAboveSubject(int block);
 	int GetNewRandom();
 	int RemoveTop(int from);
-	int GoalDistance(Goal* goal, int i);
+	int GoalDistance(int i);
+	int UnmetGoals();
+	int deepestUnmetGoal();
 protected:
 };
 

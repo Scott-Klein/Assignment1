@@ -13,7 +13,7 @@ Solver::Solver(Options options)
 {
 	state = options.GetState();
 	goal = options.GetGoal();
-
+	state->SetGoal(goal);
 	this->found = Search();
 }
 
@@ -55,11 +55,11 @@ bool Solver::Search()
 			{
 				continue;
 			}
-			if (neighbour->GoalAccomplished(goal))
+			if (neighbour->GoalAccomplished())
 			{
 				return unWindMoves(neighbour);
 			}
-			neighbour->CalculateHeuristic(goal);
+			neighbour->CalculateHeuristic();
 			openSet.push(Node(neighbour, current));
 		}
 	}
