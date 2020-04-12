@@ -1,0 +1,8 @@
+#pragma once
+
+enum SolverType
+{
+	SOLVERTYPE_ATOMIC,
+	SOLVERTYPE_DISJUNCTIVE,
+	SOLVERTYPE_CONJUNCTIVE
+};

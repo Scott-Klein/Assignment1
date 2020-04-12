@@ -1,22 +1,13 @@
 #pragma once
 #include <vector>
-#include <list>
-#include <stack>
-#include <queue>
 #include "Goal.h"
 #include "Action.h"
-
 using namespace std;
 
 class State
 {
 public:
-
 	friend bool operator<(const State& lhs, const State& rhs);
-
-	bool operator==(const State& rhs) const { 
-		return true;
-	}
 
 	State(int n, int k);
 	State();
@@ -26,13 +17,23 @@ public:
 	void OutputLegalActions();
 	int BoardSize();
 	int* CopyInternalState();
-	int LegalNeighbourCount();
-	bool MoveColumn(int from, int to);
-	void CalculateHeuristic(Goal goal);
+	bool Move(int from, int to);
+	bool Move(Action action);
+	void CalculateHeuristic();
+
+	void CombinedGoalHeuristic(int goalIndex);
+
+	void NearestGoalHeuristic();
 
 	int BlockAt(int column, int row);
 
-	bool GoalAccomplished(Goal goal);
+	bool GoalAccomplished();
+
+	bool CheckDisjunctiveGoal();
+
+	bool CheckConjunctiveGoal();
+
+	bool CheckAtomicGoal();
 
 	vector<State*> GetNeighbours();
 
@@ -60,6 +61,14 @@ public:
 	{
 		return hash;
 	}
+	Goal* GetGoal()
+	{
+		return goal;
+	}
+	void SetGoal(Goal* goal)
+	{
+		this->goal = goal;
+	}
 private:
 	//vars
 	int* internalState;
@@ -72,6 +81,7 @@ private:
 	vector<int> candidatePositioins;
 	vector<Action> actions;
 	State* previous;
+	Goal* goal;
 	//funcs
 	void PrintFirstLine();
 	void PrintAllRows();
@@ -95,6 +105,9 @@ private:
 	int CountBlocksAtAndAboveSubject(int block);
 	int GetNewRandom();
 	int RemoveTop(int from);
+	int GoalDistance(int i);
+	int UnmetGoals();
+	int deepestUnmetGoal();
 protected:
 };
 

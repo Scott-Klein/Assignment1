@@ -1,24 +1,29 @@
 #pragma once
-#include "Goal.h"
 #include <stack>
-#include <queue>
-#include <vector>
-#include "State.h"
 #include "Action.h"
+#include "State.h"
+#include "Options.h"
 
 class Solver
 {
 public:
-	Solver(Goal goal, State* state);
-	Solver();
+	Solver(Options options);
+
 	bool Success();
+
+	stack<Action> GetWinningMoves()
+	{
+		return this->goalPath;
+	}
+	void PrintWinningMoves();
 private:
-	Goal goal;
+	Goal* goal;
 	State* state;
 	stack<Action> goalPath;
 	bool Search();
 	bool found;
 	bool unWindMoves(State* endState);
+	
 protected:
 };
 
