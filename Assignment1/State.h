@@ -16,6 +16,10 @@ public:
 
 	State(State* parent, Action action);
 
+	~State()
+	{
+		delete internalState;
+	}
 	int BoardSize();
 
 	int* CopyInternalState();

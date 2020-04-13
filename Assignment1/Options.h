@@ -18,7 +18,6 @@ public:
 		initialState = new State(Size, Numbers);
 		goal = new Goal(Numbers, Size, Type);
 	}
-
 	State* GetState()
 	{
 		return initialState;
