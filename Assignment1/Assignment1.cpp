@@ -1,9 +1,4 @@
 #pragma once
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
-
 #include <iostream>
 #include "Options.h"
 #include "Solver.h"
@@ -31,7 +26,6 @@ int main()
             cout << "Could not find a solution" << endl;
         }
     } while (runAgain());
-    _CrtDumpMemoryLeaks();
 }
 
 bool runAgain()
