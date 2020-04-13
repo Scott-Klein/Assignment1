@@ -80,7 +80,10 @@ void State::CalculateHeuristic()
 	}
 	else if (goal->GetType() == SOLVERTYPE_CONJUNCTIVE)
 	{
-		heuristic = 1000 * UnmetGoals();
+		if (RowOfDeepestGoal() > 1)
+		{
+			heuristic = 10 * RowOfDeepestGoal();
+		}
 		heuristic += GoalDistance(deepestUnmetGoal());
 	}
 	else if (goal->GetType() == SOLVERTYPE_DISJUNCTIVE)
@@ -94,6 +97,7 @@ void State::Print()
 	//0, 3, 6, 
 	//1, 4, 7, 
 	//2, 5, 8
+	
 	PrintFirstLine();
 
 	PrintAllRows();
@@ -219,7 +223,7 @@ vector<State*> State::GetNeighbours()
 
 void State::PrintFirstLine()
 {
-	cout << endl << "    ";
+	cout << endl << "\n    ";
 	for (int i = 0; i < size; i++)
 	{
 		cout << "-" << i << "- ";
@@ -240,7 +244,14 @@ void State::PrintAllRows()
 		cout << i << "  ";
 		for (int j = 0; j < (size * size); j += size)
 		{
-			cout << "| " << internalState[i + j] << " ";
+			if (internalState[i + j] != 0)
+			{
+				cout << "| " << internalState[i + j] << " ";
+			}
+			else
+			{
+				cout << "|   ";
+			}
 		}
 		cout << "| " << endl;
 	}
@@ -253,7 +264,7 @@ void State::PrintLastLine()
 	{
 		cout << "--- ";
 	}
-	cout << endl;
+	cout << endl << endl;
 }
 
 void State::InitialiseInternalState()
@@ -276,7 +287,7 @@ void State::ZeroInternalState()
 
 void State::InitialiseRandomisation()
 {
-	//srand(time(NULL));
+	srand(time(NULL));
 	candidatePositioins = vector<int>();
 	for (int i = 0; i < size * size; i++)
 	{
@@ -390,6 +401,20 @@ bool State::ColumnEmpty(int column)
 	return true;
 }
 
+bool State::CompletedGoalAbove(int i)
+{
+	int column = goal->Column(i), row = goal->Row(i), block = goal->Block(i);
+	int* col = GetColumn(column);
+	for (int i = 0; i < row; i++)
+	{
+		for (int k = 0; k < goal->Count(); k++)
+		{
+
+		}
+	}
+	return false;
+}
+
 int* State::GetColumn(int k)
 {
 	return &internalState[k * size];
@@ -421,6 +446,18 @@ int State::CountBlocksAtAndAboveSubject(int block)
 	}
 }
 
+int State::RowOfBlock(int block)
+{
+	for (int i = 0; i < size * size; i++)
+	{
+		if (internalState[i] == block)
+		{
+			int col = i / size;
+			return (i % size);
+		}
+	}
+}
+
 int State::GetNewRandom()
 {
 	int randomNum = rand() % candidatePositioins.size();
@@ -446,22 +483,28 @@ int State::RemoveTop(int from)
 
 int State::GoalDistance(int i)
 {
-	int firstGoal = 0;
-	int blocksInDestinationColumn = CountBlocksAtAndAbove(goal->Column(firstGoal), goal->Row(firstGoal));
-	return (blocksInDestinationColumn + CountBlocksAtAndAboveSubject(goal->Block(firstGoal)));
+	//if (true)// If there is an unmet goal below goal i, then return a monstrously large value.
+	//{
+	//	return 999999999;
+	//}
+	int blocksInDestinationColumn = CountBlocksAtAndAbove(goal->Column(i), goal->Row(i));
+	return (blocksInDestinationColumn + CountBlocksAtAndAboveSubject(goal->Block(i)));
 }
 
-int State::UnmetGoals()
+int State::RowOfDeepestGoal()
 {
-	int count = 0;
+	int max = 0;
 	for (int i = 0; i < goal->Count(); i++)
 	{
 		if (BlockAt(goal->Column(i), goal->Row(i)) != goal->Block(i))
 		{
-			count++;
+			if (goal->Row(i) > max)
+			{
+				max = goal->Row(i);
+			}
 		}
 	}
-	return count;
+	return max;
 }
 
 int State::deepestUnmetGoal()
@@ -469,7 +512,7 @@ int State::deepestUnmetGoal()
 	int index = 0;
 	for (int i = 0; i < goal->Count(); i++)
 	{
-		if (goal->Row(i) > index && BlockAt(goal->Column(i), goal->Row(i) != goal->Block(i))) // if 
+		if (goal->Row(i) > index && BlockAt(goal->Column(i), goal->Row(i)) != goal->Block(i)) // if 
 		{
 			index = i;
 		}

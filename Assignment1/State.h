@@ -118,11 +118,15 @@ private:
 
 	bool ColumnEmpty(int column);
 
+	bool CompletedGoalAbove(int i);
+
 	int* GetColumn(int k);
 
 	int CountBlocksAtAndAbove(int col, int row);
 
 	int CountBlocksAtAndAboveSubject(int block);
+
+	int RowOfBlock(int block);
 
 	int GetNewRandom();
 
@@ -130,7 +134,7 @@ private:
 
 	int GoalDistance(int i);
 
-	int UnmetGoals();
+	int RowOfDeepestGoal();
 
 	int deepestUnmetGoal();
 

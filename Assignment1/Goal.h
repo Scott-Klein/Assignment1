@@ -17,7 +17,7 @@ public:
 			int input = 1;
 			while (input > 0)
 			{
-				CollectNewGoal(k,n);
+				CollectNewGoal(k, n);
 				cout << "Input a positive number if you'd like to enter another goal:" << endl;
 				cin >> input;
 			}
@@ -48,9 +48,10 @@ public:
 
 	void DisjunctiveSuccess(int i);
 	void Print();
+	void Print(int i);
 private:
 	SolverType goalType;
-	
+
 	vector<int> blocks, rows, columns;
 
 	int disjunctiveSuccessIndex;

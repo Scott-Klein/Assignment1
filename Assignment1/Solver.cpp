@@ -25,8 +25,15 @@ bool Solver::Success()
 
 void Solver::PrintWinningMoves()
 {
+	int step = 1;
 	while (!goalPath.empty())
 	{
+		for (int i = 0; i < (4*state->BoardSize())+6; i++)
+		{
+			cout << "*";
+		}
+		cout << "\nStep: " << step++ << "\n";
+		cout << endl;
 		state->Move(goalPath.top());
 		goalPath.top().PrintMove();
 		goalPath.pop();
@@ -37,7 +44,6 @@ void Solver::PrintWinningMoves()
 
 bool Solver::Search()
 {
-
 	openSet.push(Node(state));
 	while (!openSet.empty())
 	{

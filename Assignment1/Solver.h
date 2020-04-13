@@ -29,10 +29,6 @@ public:
 				delete item;
 			}
 		}
-		for (int i = 0; i < neighbours.size(); i++)
-		{
-			delete neighbours[i];
-		}
 	}
 	stack<Action> GetWinningMoves()
 	{

@@ -31,7 +31,7 @@ int main()
 bool runAgain()
 {
     char result;
-    cout << "Would you like to run the program again? (y / n) :";
+    cout << endl << "Would you like to run the program again? (y / n) :";
     cin >> result;
     if (result == 'y' || result == 'Y')
     {

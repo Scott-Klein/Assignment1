@@ -21,6 +21,11 @@ void Goal::Print()
 	}
 }
 
+void Goal::Print(int i)
+{
+	goalLineDisplay(columns[i], rows[i], blocks[i]);
+}
+
 bool Goal::GoalConflicts(int column, int row, int block)
 {
 	for (int i = 0; i < Count(); i++)
@@ -48,16 +53,19 @@ void Goal::CollectNewGoal(int k, int n)
 		while (block < 1 || block > k)
 		{
 			cout << "Please choose a block to target" << endl;
+			cout << "Block (1 - " << k << "): ";
 			cin >> block;
 		}
 		while (column > n - 1 || column < 0)
 		{
 			cout << "Please choose a column you want to deposit" << endl;
+			cout << "Column (0 - " << n-1 << "): ";
 			cin >> column;
 		}
 		while (row > n - 1 || row < 0)
 		{
-			cout << "Please choose the row you want the block to reach" << endl;
+			cout << "Please choose the row" << endl;
+			cout << "Row (0 - " << n - 1 << "): ";
 			cin >> row;
 		}
 	} while (GoalConflicts(column, row, block));
