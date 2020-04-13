@@ -1,3 +1,5 @@
+//Refactored once
+
 #pragma once
 #include <iostream>
 
@@ -30,15 +32,6 @@ public:
 	bool operator!=(const Action& rhs)
 	{
 		return !(*this == rhs);
-	}
-
-	bool IsInverseAction(Action action)
-	{
-		if (this->colFrom == action.GetTo() && this->colTo == action.GetFrom())
-		{
-			return true;
-		}
-		return false;
 	}
 
 	int GetFrom()

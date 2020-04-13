@@ -1,3 +1,4 @@
+//Refactored once
 #pragma once
 #include "State.h"
 #include "Goal.h"
@@ -28,15 +29,18 @@ public:
 		return goal;
 	}
 private:
-	Goal* goal;
+	void QueryType();
+	void QueryNumbers();
+	void QuerySize();
+
+	void PrintOptions();
+
+	bool ValidateOptions();
+
 	int Size;
 	int Numbers;
 	SolverType Type;
 	State* initialState;
-	void QueryType();
-	void QueryNumbers();
-	void QuerySize();
-	bool ValidateOptions();
-	void PrintOptions();
+	Goal* goal;
 };
 

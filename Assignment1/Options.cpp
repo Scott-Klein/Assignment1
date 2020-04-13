@@ -1,4 +1,5 @@
-﻿#include "Options.h"
+﻿//Refactored once
+#include "Options.h"
 #include <iostream>
 #include "SolverType.h"
 
@@ -63,7 +64,7 @@ bool Options::ValidateOptions()
 	}
 	else
 	{
-		cout << "Invalid options: Board size must be greater than 3, the number of blocks must be between n and n^2-n" << endl;
+		cout << "Board size must be greater than 3, the number of blocks must be between n and n^2-n" << endl;
 		return false;
 	}
 }

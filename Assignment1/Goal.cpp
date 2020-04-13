@@ -1,3 +1,4 @@
+//Refactored once
 #include "Goal.h"
 
 void Goal::DisjunctiveSuccess(int i)
