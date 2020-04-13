@@ -8,7 +8,7 @@ class Node
 public:
 	//Must be friend because of some reason.
 	friend bool operator<(const Node& lhs, const Node& rhs);
-
+	Node() {};
 	Node(State* d)
 	{
 		this->data = d;

@@ -276,7 +276,7 @@ void State::ZeroInternalState()
 
 void State::InitialiseRandomisation()
 {
-	srand(time(NULL));
+	//srand(time(NULL));
 	candidatePositioins = vector<int>();
 	for (int i = 0; i < size * size; i++)
 	{

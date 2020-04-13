@@ -37,23 +37,21 @@ void Solver::PrintWinningMoves()
 
 bool Solver::Search()
 {
-	auto cmp = [](State* a, State* b) { return a->GetHash() > b->GetHash(); };
-	priority_queue<Node> openSet;
-	set<State*, decltype(cmp)> closedSet;
-	openSet.push(Node(state));
 
+	openSet.push(Node(state));
 	while (!openSet.empty())
 	{
 		Node currentNode = openSet.top();
 		State* current = currentNode.GetData();
 		openSet.pop();
-		closedSet.insert(current);
-		vector<State*> neighbours = current->GetNeighbours();
+		closedSet.push_back(current);
+		neighbours = current->GetNeighbours();
 		for (int i = 0; i < neighbours.size(); i++)
 		{
 			State* neighbour = neighbours[i];
-			if (closedSet.find(neighbour) != closedSet.end()) //if neighbour is in closeSet, then skip this run
+			if ((find(closedSet.begin(), closedSet.end(), neighbour) != closedSet.end()))
 			{
+				delete neighbour;
 				continue;
 			}
 			if (neighbour->GoalAccomplished())
@@ -77,3 +75,4 @@ bool Solver::unWindMoves(State* endState)
 	}
 	return true;
 }
+
