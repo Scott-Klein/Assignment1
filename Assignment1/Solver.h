@@ -1,3 +1,4 @@
+//Refactored once
 #pragma once
 #include <stack>
 #include "Action.h"
@@ -9,21 +10,23 @@ class Solver
 public:
 	Solver(Options options);
 
-	bool Success();
-
 	stack<Action> GetWinningMoves()
 	{
 		return this->goalPath;
 	}
+
+	bool Success();
+
 	void PrintWinningMoves();
 private:
+	bool Search();
+
+	bool unWindMoves(State* endState);
+
 	Goal* goal;
 	State* state;
 	stack<Action> goalPath;
-	bool Search();
+
 	bool found;
-	bool unWindMoves(State* endState);
-	
-protected:
 };
 

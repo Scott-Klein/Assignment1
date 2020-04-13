@@ -1,3 +1,4 @@
+//Refactored once
 #include "node.h"
 
 bool operator<(const Node& lhs, const Node& rhs)

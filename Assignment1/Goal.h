@@ -1,16 +1,14 @@
 #pragma once
 #include <iostream>
 #include "SolverType.h"
+//Refactored once
+
 #include <vector>
 using namespace std;
 
 class Goal
 {
 public:
-	Goal()
-	{
-	}
-
 	Goal(int k, int n, SolverType type)
 	{
 		this->goalType = type;
@@ -25,19 +23,22 @@ public:
 			}
 		}
 	}
+
 	int Block(int i)
 	{
 		return blocks[i];
 	}
-
 	int Column(int i)
 	{
 		return columns[i];
 	}
-
 	int Row(int i)
 	{
 		return rows[i];
+	}
+	int Count()
+	{
+		return blocks.size();
 	}
 
 	SolverType GetType()
@@ -45,19 +46,20 @@ public:
 		return goalType;
 	}
 
-	int Count()
-	{
-		return blocks.size();
-	}
 	void DisjunctiveSuccess(int i);
 	void Print();
 private:
 	SolverType goalType;
-	void CollectNewGoal(int k, int n);
+	
 	vector<int> blocks, rows, columns;
+
 	int disjunctiveSuccessIndex;
+
+	bool GoalConflicts(int column, int row, int block);
+
+	void CollectNewGoal(int k, int n);
 	void goalLineDisplay(int column, int row, int block);
-protected:
+
 };
 
 

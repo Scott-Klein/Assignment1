@@ -6,6 +6,15 @@
 
 using namespace std;
 
+bool operator<(const State& lhs, const State& rhs)
+{
+	if (lhs.hash == rhs.hash)
+	{
+		return false;
+	}
+	return ((lhs.distance + lhs.heuristic) > (rhs.distance + rhs.heuristic));
+}
+
 State::State(int n, int k)
 {
 	if (n > 2)
@@ -41,7 +50,44 @@ State::State(State* parent, Action action)
 	this->goal = parent->GetGoal();
 }
 
-#pragma region PublicFunctions
+int State::BoardSize()
+{
+	return this->size;
+}
+
+int* State::CopyInternalState()
+{
+	int* newState = new int[size * size];
+	for (int i = 0; i < size * size; i++)
+	{
+		newState[i] = internalState[i];
+	}
+
+	return newState;
+}
+
+int State::BlockAt(int column, int row)
+{
+	return this->internalState[column * size + row];
+}
+
+void State::CalculateHeuristic()
+{
+	if (goal->GetType() == SOLVERTYPE_ATOMIC)
+	{
+		int atomicGoal = 0;
+		heuristic = GoalDistance(atomicGoal);
+	}
+	else if (goal->GetType() == SOLVERTYPE_CONJUNCTIVE)
+	{
+		heuristic = 1000 * UnmetGoals();
+		heuristic += GoalDistance(deepestUnmetGoal());
+	}
+	else if (goal->GetType() == SOLVERTYPE_DISJUNCTIVE)
+	{
+		NearestGoalHeuristic();
+	}
+}
 
 void State::Print()
 {
@@ -61,22 +107,50 @@ void State::OutputLegalActions()
 	PrintLegalActions();
 }
 
-int State::BoardSize()
+void State::CombinedGoalHeuristic(int goalIndex)
 {
-	return this->size;
+	int total = 0;
+	for (int i = 0; i < goal->Count(); i++)
+	{
+		total += GoalDistance(i);
+	}
+	heuristic = total;
 }
 
-int* State::CopyInternalState()
+void State::NearestGoalHeuristic()
 {
-	int* newState = new int[size * size];
-	for (int i = 0; i < size * size; i++)
+	int min = 9999999999;
+	for (int i = 0; i < goal->Count(); i++)
 	{
-		newState[i] = internalState[i];
+		int current = GoalDistance(i);
+		if (current < min)
+		{
+			min = current;
+		}
+	}
+	heuristic = min;
+}
+
+bool State::Move(int from, int to)
+{
+	if (TopOfColumnClear(to))
+	{
+		DepositTop(to, RemoveTop(from));
+		DropNumbers();
+		HashCode();
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 
-	return newState;
 }
 
+bool State::Move(Action action)
+{
+	return Move(action.GetFrom(), action.GetTo());
+}
 
 bool State::GoalAccomplished()
 {
@@ -140,175 +214,6 @@ vector<State*> State::GetNeighbours()
 	{
 		result.push_back(new State(this, actions[i]));
 	}
-	return result;
-}
-
-#pragma endregion
-
-#pragma region PrivateFunctions
-
-void State::RandomiseNewState()
-{
-	for (int i = 0; i < numbers; i++)
-	{
-		internalState[GetNewRandom()] = i + 1;
-	}
-}
-
-void State::DropNumbers()
-{
-	for (int i = 0; i < size; i++)
-	{
-		DropColumn(GetColumn(i));
-	}
-}
-
-void State::DropColumn(int* column)
-{
-	list<int> temp;
-	for (int i = 0; i < size; i++)
-	{
-		temp.push_back(column[i]);
-		column[i] = 0;
-	}
-	for (int i = size - 1; i >= 0; i--)
-	{
-		while (!temp.empty() && temp.back() == 0)
-		{
-			temp.pop_back();
-		}
-		if (!temp.empty())
-		{
-			column[i] = temp.back();
-			temp.pop_back();
-		}
-	}
-}
-
-bool State::Move(int from, int to)
-{
-	if (TopOfColumnClear(to))
-	{
-		DepositTop(to, RemoveTop(from));
-		DropNumbers();
-		HashCode();
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-
-}
-
-bool State::Move(Action action)
-{
-	return Move(action.GetFrom(), action.GetTo());
-}
-
-int State::BlockAt(int column, int row)
-{
-	return this->internalState[column * size + row];
-}
-
-int State::RemoveTop(int from)
-{
-	int* column = GetColumn(from);
-	for (int i = 0; i < size; i++)
-	{
-		if (column[i] > 0)
-		{
-			int result = column[i];
-			column[i] = 0;
-			return result;
-		}
-	}
-	return 0;
-}
-
-void State::DepositTop(int column, int value)
-{
-	GetColumn(column)[0] = value;
-}
-
-
-bool State::CanDoAction(Action action)
-{
-	if (action.GetFrom() == action.GetTo())
-	{
-		return false;
-	}
-	return (TopOfColumnClear(action.GetTo()) && !ColumnEmpty(action.GetFrom()));
-}
-
-bool State::TopOfColumnClear(int column)
-{
-	return GetColumn(column)[0] == 0;
-}
-
-bool State::ColumnEmpty(int column)
-{
-	int* arr = GetColumn(column);
-	for (int i = 0; i < size; i++)
-	{
-		if (arr[i] > 0)
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-int* State::GetColumn(int k)
-{
-	return &internalState[k * size];
-}
-
-int State::CountBlocksAtAndAbove(int col, int row)
-{
-	int* column = GetColumn(col);
-	int count = 0;
-	for (int i = 0; i < row+1; i++)
-	{
-		if (column[i] > 0)
-		{
-			count++;
-		}
-	}
-	return count;
-}
-
-void State::GeneratePossibleActions()
-{
-	for (int fromColumn = 0; fromColumn < size; fromColumn++)
-	{
-		for (int toColumn = 0; toColumn < size; toColumn++)
-		{
-			Action candidate = Action(fromColumn, toColumn);
-			if (CanDoAction(candidate))
-			{
-				this->actions.push_back(candidate);
-			}
-		}
-	}
-}
-
-
-void State::PrintLegalActions()
-{
-	while (!actions.empty())
-	{
-		//auto action = actions.top();
-		//action.PrintMove();
-		//actions.pop();
-	}
-}
-
-int State::GetNewRandom()
-{
-	int randomNum = rand() % candidatePositioins.size();
-	int result = candidatePositioins[randomNum];
-	candidatePositioins.erase(candidatePositioins.begin() + randomNum);
 	return result;
 }
 
@@ -379,6 +284,74 @@ void State::InitialiseRandomisation()
 	}
 }
 
+void State::RandomiseNewState()
+{
+	for (int i = 0; i < numbers; i++)
+	{
+		internalState[GetNewRandom()] = i + 1;
+	}
+}
+
+void State::DropNumbers()
+{
+	for (int i = 0; i < size; i++)
+	{
+		DropColumn(GetColumn(i));
+	}
+}
+
+void State::GeneratePossibleActions()
+{
+	for (int fromColumn = 0; fromColumn < size; fromColumn++)
+	{
+		for (int toColumn = 0; toColumn < size; toColumn++)
+		{
+			Action candidate = Action(fromColumn, toColumn);
+			if (CanDoAction(candidate))
+			{
+				this->actions.push_back(candidate);
+			}
+		}
+	}
+}
+
+void State::PrintLegalActions()
+{
+	while (!actions.empty())
+	{
+		//auto action = actions.top();
+		//action.PrintMove();
+		//actions.pop();
+	}
+}
+
+void State::DropColumn(int* column)
+{
+	list<int> temp;
+	for (int i = 0; i < size; i++)
+	{
+		temp.push_back(column[i]);
+		column[i] = 0;
+	}
+	for (int i = size - 1; i >= 0; i--)
+	{
+		while (!temp.empty() && temp.back() == 0)
+		{
+			temp.pop_back();
+		}
+		if (!temp.empty())
+		{
+			column[i] = temp.back();
+			temp.pop_back();
+		}
+	}
+}
+
+void State::DepositTop(int column, int value)
+{
+	GetColumn(column)[0] = value;
+}
+
 void State::HashCode()
 {
 	int code = 0;
@@ -390,69 +363,85 @@ void State::HashCode()
 	hash = code;
 }
 
-
-bool operator<(const State& lhs, const State& rhs)
+bool State::CanDoAction(Action action)
 {
-	if (lhs.hash == rhs.hash)
+	if (action.GetFrom() == action.GetTo())
 	{
 		return false;
 	}
-	return ((lhs.distance + lhs.heuristic) > (rhs.distance + rhs.heuristic));
+	return (TopOfColumnClear(action.GetTo()) && !ColumnEmpty(action.GetFrom()));
 }
 
-int State::deepestUnmetGoal()
+bool State::TopOfColumnClear(int column)
 {
-	int index = 0;
-	for (int i = 0; i < goal->Count(); i++)
+	return GetColumn(column)[0] == 0;
+}
+
+bool State::ColumnEmpty(int column)
+{
+	int* arr = GetColumn(column);
+	for (int i = 0; i < size; i++)
 	{
-		if (goal->Row(i) > index && BlockAt(goal->Column(i), goal->Row(i) != goal->Block(i))) // if 
+		if (arr[i] > 0)
 		{
-			index = i;
+			return false;
 		}
 	}
-	return index;
+	return true;
 }
 
-void State::CalculateHeuristic()
+int* State::GetColumn(int k)
 {
-	if (goal->GetType() == SOLVERTYPE_ATOMIC)
-	{
-		int atomicGoal = 0;
-		heuristic = GoalDistance(atomicGoal);
-	}
-	else if (goal->GetType() == SOLVERTYPE_CONJUNCTIVE)
-	{
-		heuristic = 1000*UnmetGoals();
-		heuristic += GoalDistance(deepestUnmetGoal());
-	}
-	else if (goal->GetType() == SOLVERTYPE_DISJUNCTIVE)
-	{
-		NearestGoalHeuristic();
-	}
+	return &internalState[k * size];
 }
 
-void State::CombinedGoalHeuristic(int goalIndex)
+int State::CountBlocksAtAndAbove(int col, int row)
 {
-	int total = 0;
-	for (int i = 0; i < goal->Count(); i++)
+	int* column = GetColumn(col);
+	int count = 0;
+	for (int i = 0; i < row+1; i++)
 	{
-		total += GoalDistance(i);
-	}
-	heuristic = total;
-}
-
-void State::NearestGoalHeuristic()
-{
-	int min = 9999999999;
-	for (int i = 0; i < goal->Count(); i++)
-	{
-		int current = GoalDistance(i);
-		if (current < min)
+		if (column[i] > 0)
 		{
-			min = current;
+			count++;
 		}
 	}
-	heuristic = min;
+	return count;
+}
+
+int State::CountBlocksAtAndAboveSubject(int block)
+{
+	for (int i = 0; i < size * size; i++)
+	{
+		if (internalState[i] == block)
+		{
+			int col = i / size;
+			return CountBlocksAtAndAbove(col, (i % size));
+		}
+	}
+}
+
+int State::GetNewRandom()
+{
+	int randomNum = rand() % candidatePositioins.size();
+	int result = candidatePositioins[randomNum];
+	candidatePositioins.erase(candidatePositioins.begin() + randomNum);
+	return result;
+}
+
+int State::RemoveTop(int from)
+{
+	int* column = GetColumn(from);
+	for (int i = 0; i < size; i++)
+	{
+		if (column[i] > 0)
+		{
+			int result = column[i];
+			column[i] = 0;
+			return result;
+		}
+	}
+	return 0;
 }
 
 int State::GoalDistance(int i)
@@ -475,22 +464,15 @@ int State::UnmetGoals()
 	return count;
 }
 
-int State::CountBlocksAtAndAboveSubject(int block)
+int State::deepestUnmetGoal()
 {
-	for (int i = 0; i < size * size; i++)
+	int index = 0;
+	for (int i = 0; i < goal->Count(); i++)
 	{
-		if (internalState[i] == block)
+		if (goal->Row(i) > index && BlockAt(goal->Column(i), goal->Row(i) != goal->Block(i))) // if 
 		{
-			int col = i / size;
-			return CountBlocksAtAndAbove(col, (i % size));
+			index = i;
 		}
 	}
+	return index;
 }
-
-
-
-#pragma endregion
-
-
-
-
