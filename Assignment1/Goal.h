@@ -55,8 +55,11 @@ private:
 
 	int disjunctiveSuccessIndex;
 
+	bool GoalConflicts(int column, int row, int block);
+
 	void CollectNewGoal(int k, int n);
 	void goalLineDisplay(int column, int row, int block);
+
 };
 
 
