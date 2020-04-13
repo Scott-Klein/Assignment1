@@ -9,7 +9,6 @@ int main()
 {
     cout << "Assignment 1 --- Data Structures and Algorithms.\n";
 
-    State testBoard = State(3, 6);
     Options options;
     Solver solver = Solver(options);
 
