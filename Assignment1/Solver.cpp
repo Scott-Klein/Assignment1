@@ -55,7 +55,7 @@ bool Solver::Search()
 		for (int i = 0; i < neighbours.size(); i++)
 		{
 			State* neighbour = neighbours[i];
-			if ((find(closedSet.begin(), closedSet.end(), neighbour) != closedSet.end()))
+			if (IsInClosedSet(neighbour))
 			{
 				delete neighbour;
 				continue;
@@ -69,6 +69,11 @@ bool Solver::Search()
 		}
 	}
 	return false;
+}
+
+bool Solver::IsInClosedSet(State*& neighbour)
+{
+	return find(closedSet.begin(), closedSet.end(), neighbour) != closedSet.end();
 }
 
 bool Solver::unWindMoves(State* endState)
