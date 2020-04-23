@@ -12,6 +12,7 @@ class Solver
 {
 public:
 	Solver(Options options);
+
 	~Solver() {
 		delete goal;
 		delete state;

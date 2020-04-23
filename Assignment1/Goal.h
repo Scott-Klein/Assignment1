@@ -22,6 +22,10 @@ public:
 				cin >> input;
 			}
 		}
+		else
+		{
+			CollectNewGoal(k, n);
+		}
 	}
 
 	int Block(int i)
